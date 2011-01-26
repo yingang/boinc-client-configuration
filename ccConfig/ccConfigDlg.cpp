@@ -238,7 +238,7 @@ void CccConfigDlg::OnBnClickedLoad()
 	}
 
 	MessageBox(UTIL::getDataDir() + _T("cc_config.xml has been loaded successfully."),
-		_T("Save cc_config.xml"), MB_OK|MB_ICONINFORMATION);
+		_T("Load cc_config.xml"), MB_OK|MB_ICONINFORMATION);
 }
 
 void CccConfigDlg::OnBnClickedHelpE()
