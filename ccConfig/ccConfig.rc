@@ -1,0 +1,411 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\ccConfig.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""     // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\ccConfig.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 188, 68
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About ccConfig"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    LTEXT           "BOINC Client Configuration, v1.0",IDC_STATIC,42,14,125,8,SS_NOPREFIX
+    LTEXT           "(c) 2011 Yin Gang. All rights reserved.",IDC_STATIC,42,30,139,8
+    DEFPUSHBUTTON   "OK",IDOK,131,47,50,14,WS_GROUP
+END
+
+IDD_CCCONFIG_DIALOG DIALOGEX 0, 0, 337, 236
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "BOINC Client Configuration"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "?&E",ID_HELP_E,19,215,21,14
+    PUSHBUTTON      "?&C",ID_HELP_C,41,215,21,14
+    PUSHBUTTON      "&Delete",ID_DELETE,91,214,50,15
+    PUSHBUTTON      "&Save",ID_SAVE,143,215,50,14
+    PUSHBUTTON      "&Load",ID_LOAD,193,215,50,14
+    PUSHBUTTON      "E&xit",IDCANCEL,267,215,50,14
+    CONTROL         "",IDC_TABSHEET,"SysTabControl32",WS_TABSTOP,7,7,323,200
+END
+
+IDD_PAGE_OPTION DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "abort_jobs_on_exit",IDC_CHECK_ABORT_JOBS_ON_EXIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,9,79,10
+    CONTROL         "allow_multiple_clients",IDC_CHECK_ALLOW_MULTIPLE_CLIENTS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,21,84,10
+    CONTROL         "allow_remote_gui_rpc",IDC_CHECK_ALLOW_REMOTE_GUI_RPC,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,33,86,10
+    CONTROL         "disallow_attach",IDC_CHECK_DISABLE_ATTACH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,65,10
+    CONTROL         "dont_check_file_sizes",IDC_CHECK_DONT_CHECK_FILE_SIZES,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,57,85,10
+    CONTROL         "dont_contact_ref_site",IDC_CHECK_DONT_CONTACT_REF_SITE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,69,87,10
+    CONTROL         "exit_when_idle",IDC_CHECK_EXIT_WHEN_IDLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,81,64,10
+    CONTROL         "fetch_minimal_work",IDC_CHECK_FETCH_MINIMAL_WORK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,93,79,10
+    CONTROL         "http_1_0",IDC_CHECK_HTTP_1_0,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,105,45,10
+    CONTROL         "no_alt_platform",IDC_CHECK_NO_ALT_PLATFORM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,117,67,10
+    CONTROL         "no_gpus",IDC_CHECK_NO_GPUS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,129,43,10
+    CONTROL         "no_priority_change",IDC_CHECK_NO_PRIORITY_CHANGE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,141,78,10
+    CONTROL         "os_random_only",IDC_CHECK_OS_RANDOM_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,153,78,10
+    CONTROL         "report_results_immediately",IDC_CHECK_REPORT_RESULTS_IMMEDIATELY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,165,103,10
+    CONTROL         "run_apps_manually",IDC_CHECK_RUN_APPS_MANUALLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,9,78,10
+    CONTROL         "simple_gui_only",IDC_CHECK_SIMPLE_GUI_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,21,78,10
+    CONTROL         "suppress_net_info",IDC_CHECK_SUPRESS_NET_INFO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,33,78,10
+    CONTROL         "use_all_gpus",IDC_CHECK_USE_ALL_GPUS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,45,78,10
+    CONTROL         "use_certs",IDC_CHECK_USE_CERTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,57,78,10
+    CONTROL         "use_certs_only",IDC_CHECK_USE_CERTS_ONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,69,78,10
+    CONTROL         "zero_debts",IDC_CHECK_ZERO_DEBTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,81,78,10
+END
+
+IDD_PAGE_LOGGING DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "task",IDC_CHECK_TASK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,29,10
+    CONTROL         "file_xfer",IDC_CHECK_FILE_XFER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,43,10
+    CONTROL         "sched_ops",IDC_CHECK_SCHED_OPS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,31,50,10
+    CONTROL         "app_msg_receive",IDC_CHECK_APP_MSG_RECEIVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,43,72,10
+    CONTROL         "app_msg_send",IDC_CHECK_APP_MSG_SEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,55,64,10
+    CONTROL         "benchmark_debug",IDC_CHECK_BENCHMARK_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,67,75,10
+    CONTROL         "checkpoint_debug",IDC_CHECK_CHECKPOINT_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,79,74,10
+    CONTROL         "coproc_debug",IDC_CHECK_COPROC_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,91,61,10
+    CONTROL         "cpu_sched",IDC_CHECK_CPU_SCHED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,103,50,10
+    CONTROL         "cpu_sched_debug",IDC_CHECK_CPU_SCHED_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,115,74,10
+    CONTROL         "dcf_debug",IDC_CHECK_DCF_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,127,50,10
+    CONTROL         "debt_debug",IDC_CHECK_DEBT_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,139,55,10
+    CONTROL         "file_xfer_debug",IDC_CHECK_FILE_XFER_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,151,67,10
+    CONTROL         "gui_rpc_debug",IDC_CHECK_GUI_RPC_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,163,63,10
+    CONTROL         "http_debug",IDC_CHECK_HTTP_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,7,53,10
+    CONTROL         "http_xfer_debug",IDC_CHECK_HTTP_XFER_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,19,71,10
+    CONTROL         "mem_usage_debug",IDC_CHECK_MEM_USAGE_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,31,78,10
+    CONTROL         "network_status_debug",IDC_CHECK_NETWORK_STATUS_DEBUG,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,43,90,10
+    CONTROL         "poll_debug",IDC_CHECK_POLL_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,55,51,10
+    CONTROL         "proxy_debug",IDC_CHECK_PROXY_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,67,59,10
+    CONTROL         "rr_simulation",IDC_CHECK_RR_SIMULATION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,79,57,10
+    CONTROL         "sched_op_debug",IDC_CHECK_SCHED_OP_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,91,71,10
+    CONTROL         "scrsave_debug",IDC_CHECK_SCRSAVE_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,103,65,10
+    CONTROL         "state_debug",IDC_CHECK_STATE_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,115,57,10
+    CONTROL         "statefile_debug",IDC_CHECK_STATEFILE_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,127,66,10
+    CONTROL         "task_debug",IDC_CHECK_TASK_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,139,53,10
+    CONTROL         "time_debug",IDC_CHECK_TIME_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,151,53,10
+    CONTROL         "unparsed_xml",IDC_CHECK_UNPARSED_XML,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,163,61,10
+    CONTROL         "work_fetch_debug",IDC_CHECK_WORK_FETCH_DEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,208,7,76,10
+END
+
+IDD_PAGE_OPTION2 DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_ALT_PLATFORM,112,21,94,14,ES_AUTOHSCROLL
+    LTEXT           "alt_platform",IDC_STATIC,56,21,40,8
+    EDITTEXT        IDC_EDIT_EXCLUSIVE_APP,112,37,94,14,ES_AUTOHSCROLL
+    LTEXT           "exclusive_app",IDC_STATIC,50,37,46,8
+    EDITTEXT        IDC_EDIT_EXCLUSIVE_GPU_APP,112,53,94,14,ES_AUTOHSCROLL
+    LTEXT           "exclusive_gpu_app",IDC_STATIC,34,53,62,8
+    EDITTEXT        IDC_EDIT_CLIENT_DOWNLOAD_URL,112,83,174,14,ES_AUTOHSCROLL
+    LTEXT           "client_download_url",IDC_STATIC,32,83,64,16
+    EDITTEXT        IDC_EDIT_CLIENT_VERSION_CHECK_URL,112,99,174,14,ES_AUTOHSCROLL
+    LTEXT           "client_version_check_url",IDC_STATIC,17,99,79,8
+    EDITTEXT        IDC_EDIT_NETWORK_TEST_URL,112,115,174,14,ES_AUTOHSCROLL
+    LTEXT           "network_test_url",IDC_STATIC,40,115,56,8
+    LTEXT           "force_auth",IDC_STATIC,60,145,36,8
+    COMBOBOX        IDC_CMB_FORCE_AUTH,112,145,94,39,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "(mainly for WCG)",IDC_STATIC,216,145,56,8
+    LTEXT           "(comma separated)",IDC_STATIC,216,37,63,8
+    LTEXT           "(comma separated)",IDC_STATIC,216,53,63,8
+END
+
+IDD_PAGE_OPTION3 DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "max_file_xfers",IDC_STATIC,61,41,48,8
+    LTEXT           "max_file_xfers_per_project",IDC_STATIC,19,57,90,8
+    LTEXT           "max_stderr_file_size",IDC_STATIC,42,73,67,8
+    LTEXT           "max_stdout_file_size",IDC_STATIC,41,89,68,8
+    LTEXT           "save_stats_days",IDC_STATIC,53,137,56,8
+    LTEXT           "ignore_cuda_dev",IDC_STATIC,53,25,56,8
+    LTEXT           "ignore_ati_dev",IDC_STATIC,60,9,49,8
+    LTEXT           "ncpus",IDC_STATIC,89,121,20,8
+    LTEXT           "max_tasks_reported",IDC_STATIC,42,105,67,8
+    LTEXT           "start_delay",IDC_STATIC,71,153,38,8
+    EDITTEXT        IDC_EDIT_IGNORE_ATI_DEV,122,9,48,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_IGNORE_CUDA_DEV,122,25,48,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_MAX_FILE_XFERS,122,41,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MAX_FILE_XFERS_PER_PROJECT,122,57,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MAX_STDERR_FILE_SIZE,122,73,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MAX_STDOUT_FILE_SIZE,122,89,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MAX_TASKS_REPORTED,122,105,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_NCPUS,122,121,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_SAVE_STATS_DAYS,122,137,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_START_DELAY,122,153,48,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "([0|1|2|3], comma separated)",IDC_STATIC,179,9,97,8
+    LTEXT           "([0|1|2|3], comma separated)",IDC_STATIC,179,25,97,8
+    LTEXT           "(Default: 8)",IDC_STATIC,179,41,38,8
+    LTEXT           "(Default: 2)",IDC_STATIC,179,57,38,8
+    LTEXT           "(Default: 2097152)",IDC_STATIC,179,73,62,8
+    LTEXT           "(Default: 2097152)",IDC_STATIC,179,89,62,8
+    LTEXT           "(Default: 30)",IDC_STATIC,179,137,42,8
+    LTEXT           "(seconds)",IDC_STATIC,179,153,32,8
+END
+
+IDD_PAGE_OPTION4 DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_HTTP_SERVER_NAME,102,12,94,14,ES_AUTOHSCROLL
+    LTEXT           "http_server_name",IDC_STATIC,28,12,60,8
+    EDITTEXT        IDC_EDIT_HTTP_SERVER_PORT,102,28,94,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "http_server_port",IDC_STATIC,32,28,56,8
+    EDITTEXT        IDC_EDIT_HTTP_USER_NAME,102,44,94,14,ES_AUTOHSCROLL
+    LTEXT           "http_user_name",IDC_STATIC,34,44,54,8
+    EDITTEXT        IDC_EDIT_HTTP_USER_PASSWD,101,60,94,14,ES_AUTOHSCROLL
+    LTEXT           "http_user_passwd",IDC_STATIC,28,60,60,8
+    EDITTEXT        IDC_EDIT_SOCKS_VERSION,101,76,94,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "socks_version",IDC_STATIC,42,76,46,8
+    EDITTEXT        IDC_EDIT_SOCKS_SERVER_NAME,101,92,94,14,ES_AUTOHSCROLL
+    LTEXT           "socks_server_name",IDC_STATIC,24,92,64,8
+    EDITTEXT        IDC_EDIT_SOCKS_SERVER_PORT,101,108,94,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "socks_server_port",IDC_STATIC,28,108,60,8
+    EDITTEXT        IDC_EDIT_SOCK5_USER_NAME,101,124,94,14,ES_AUTOHSCROLL
+    LTEXT           "socks5_user_name",IDC_STATIC,26,124,62,8
+    EDITTEXT        IDC_EDIT_SOCKS5_USER_PASSWD,101,140,94,14,ES_AUTOHSCROLL
+    LTEXT           "socks5_user_passwd",IDC_STATIC,20,140,68,8
+    EDITTEXT        IDC_EDIT_NO_PROXY,101,156,94,14,ES_AUTOHSCROLL
+    LTEXT           "no_proxy",IDC_STATIC,56,156,32,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000904e4"
+        BEGIN
+            VALUE "CompanyName", "Yin Gang"
+            VALUE "FileDescription", "BOINC Client Configuration"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "ccConfig.exe"
+            VALUE "LegalCopyright", "(c) 2011 Yin Gang. All rights reserved."
+            VALUE "OriginalFilename", "ccConfig.exe"
+            VALUE "ProductName", "BOINC Add-on"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x9, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 181
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    IDD_CCCONFIG_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 330
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 229
+    END
+
+    IDD_PAGE_OPTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        VERTGUIDE, 124
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
+
+    IDD_PAGE_LOGGING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        VERTGUIDE, 107
+        VERTGUIDE, 208
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
+
+    IDD_PAGE_OPTION2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        VERTGUIDE, 96
+        VERTGUIDE, 112
+        VERTGUIDE, 206
+        VERTGUIDE, 216
+        VERTGUIDE, 286
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+        HORZGUIDE, 145
+    END
+
+    IDD_PAGE_OPTION3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        VERTGUIDE, 109
+        VERTGUIDE, 122
+        VERTGUIDE, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
+
+    IDD_PAGE_OPTION4, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        VERTGUIDE, 88
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About ccConfig..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "res\ccConfig.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"     // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
