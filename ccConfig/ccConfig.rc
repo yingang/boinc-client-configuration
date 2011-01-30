@@ -94,13 +94,13 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "BOINC Client Configuration"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "?&E",ID_HELP_E,19,215,21,14
-    PUSHBUTTON      "?&C",ID_HELP_C,41,215,21,14
-    PUSHBUTTON      "&Delete",ID_DELETE,91,214,50,15
-    PUSHBUTTON      "&Save",ID_SAVE,143,215,50,14
-    PUSHBUTTON      "&Load",ID_LOAD,193,215,50,14
-    PUSHBUTTON      "E&xit",IDCANCEL,267,215,50,14
+    PUSHBUTTON      "?&E",ID_HELP_E,7,215,21,14
+    PUSHBUTTON      "?&C",ID_HELP_C,29,215,21,14
+    PUSHBUTTON      "&Delete",ID_DELETE,85,214,50,15
+    PUSHBUTTON      "&Save",ID_SAVE,139,215,50,14
+    PUSHBUTTON      "E&xit",IDCANCEL,280,215,50,14
     CONTROL         "",IDC_TABSHEET,"SysTabControl32",WS_TABSTOP,7,7,323,200
+    CONTROL         "&Open",IDC_SPLIT_OPEN,"Button",BS_SPLITBUTTON | WS_TABSTOP,193,215,50,14
 END
 
 IDD_PAGE_OPTION DIALOGEX 0, 0, 316, 183
@@ -261,7 +261,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,2
+ FILEVERSION 1,1,0,3
  PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -279,7 +279,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Yin Gang"
             VALUE "FileDescription", "BOINC Client Configuration"
-            VALUE "FileVersion", "1, 0, 0, 2"
+            VALUE "FileVersion", "1, 1, 0, 3"
             VALUE "InternalName", "ccConfig.exe"
             VALUE "LegalCopyright", "(c) 2011 Yin Gang. All rights reserved."
             VALUE "OriginalFilename", "ccConfig.exe"
@@ -372,6 +372,22 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_OPEN MENU 
+BEGIN
+    POPUP "1"
+    BEGIN
+        MENUITEM "Open...",                     ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                ID_FILE_MRU_FILE1
+    END
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

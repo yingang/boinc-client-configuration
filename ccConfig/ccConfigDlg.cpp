@@ -9,6 +9,8 @@
 #include "Util.h"
 #include "tinyxml.h"
 
+#include <algorithm>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -55,6 +57,7 @@ void CccConfigDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TABSHEET, m_tabSheet);
+	DDX_Control(pDX, IDC_SPLIT_OPEN, m_sbOpen);
 }
 
 BEGIN_MESSAGE_MAP(CccConfigDlg, CDialog)
@@ -65,10 +68,12 @@ BEGIN_MESSAGE_MAP(CccConfigDlg, CDialog)
 	ON_BN_CLICKED(IDCANCEL, &CccConfigDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, &CccConfigDlg::OnBnClickedOk)
 	ON_BN_CLICKED(ID_SAVE, &CccConfigDlg::OnBnClickedSave)
-	ON_BN_CLICKED(ID_LOAD, &CccConfigDlg::OnBnClickedLoad)
 	ON_BN_CLICKED(ID_HELP_E, &CccConfigDlg::OnBnClickedHelpE)
 	ON_BN_CLICKED(ID_DELETE, &CccConfigDlg::OnBnClickedDelete)
 	ON_BN_CLICKED(ID_HELP_C, &CccConfigDlg::OnBnClickedHelpC)
+	ON_BN_CLICKED(IDC_SPLIT_OPEN, &CccConfigDlg::OnBnClickedSplitOpen)
+	ON_COMMAND(ID_FILE_OPEN, &CccConfigDlg::OnFileOpen)
+	ON_COMMAND_EX_RANGE(ID_FILE_MRU_FILE1, ID_FILE_MRU_FILE16, CccConfigDlg::OnRecentFileOpen)
 END_MESSAGE_MAP()
 
 
@@ -110,7 +115,15 @@ BOOL CccConfigDlg::OnInitDialog()
 	m_tabSheet.AddPage(_T("Options4"), &m_pageOption4, IDD_PAGE_OPTION4);
 	m_tabSheet.Show();
 
-	OnBnClickedLoad();
+	m_pMenuOpen = new CMenu();
+	m_pMenuOpen->CreatePopupMenu();
+	m_pMenuOpen->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_FILE_OPEN, _T("&Open..."));
+	m_pMenuOpen->AppendMenu(MF_SEPARATOR, 0, _T(""));
+
+	m_sbOpen.SetDropDownMenu(m_pMenuOpen);
+	loadRecentFileList();
+
+	OnBnClickedSplitOpen();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -177,6 +190,11 @@ void CccConfigDlg::OnBnClickedOk()
 
 void CccConfigDlg::OnBnClickedSave()
 {
+	saveConfigFileAs(m_strFileName);
+}
+
+void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
+{
 	TiXmlDocument doc;
 
 	TiXmlDeclaration* pDecl = new TiXmlDeclaration("1.0", "UTF-8", "");
@@ -196,22 +214,21 @@ void CccConfigDlg::OnBnClickedSave()
 	pRoot->LinkEndChild(pOptions);
 
 	doc.LinkEndChild(pRoot);
-	doc.SaveFile((UTIL::convertToMultiChar(LPCTSTR(UTIL::getDataDir())) + "cc_config.xml").c_str());
+	doc.SaveFile(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
 
-	MessageBox(UTIL::getDataDir()
-			+ _T("cc_config.xml has been modified, ")
+	MessageBox(m_strFileName + _T(" has been modified, ")
 			+ _T("please re-read it in BOINC Manager (5.8.2+) or restart boinc.exe (prior 5.8.2)."),
 		_T("Save cc_config.xml"), MB_OK|MB_ICONINFORMATION);
 }
 
-void CccConfigDlg::OnBnClickedLoad()
+BOOL CccConfigDlg::loadConfigFile()
 {
-	TiXmlDocument hXMLDoc((UTIL::convertToMultiChar(LPCTSTR(UTIL::getDataDir())) + "cc_config.xml").c_str());
+	TiXmlDocument hXMLDoc(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
 	if (!hXMLDoc.LoadFile())
 	{
-		MessageBox(_T("Failed to locate cc_config.xml!"),
+		MessageBox(_T("Failed to load cc_config.xml!"),
 			_T("Load cc_config.xml"), MB_OK|MB_ICONERROR);
-		return;
+		return FALSE;
 	}
 
 	TiXmlElement* pElem = hXMLDoc.FirstChildElement();
@@ -219,7 +236,7 @@ void CccConfigDlg::OnBnClickedLoad()
 	{
 		MessageBox(_T("Syntax error in cc_config.xml!"),
 			_T("Load cc_config.xml"), MB_OK|MB_ICONERROR);
-		return;
+		return FALSE;
 	}
 
 	TiXmlHandle hXMLRoot = TiXmlHandle(pElem);
@@ -237,8 +254,10 @@ void CccConfigDlg::OnBnClickedLoad()
 		m_pageOption4.loadFromXML(pOptions);
 	}
 
-	MessageBox(UTIL::getDataDir() + _T("cc_config.xml has been loaded successfully."),
+	MessageBox(m_strFileName + _T(" has been loaded successfully."),
 		_T("Load cc_config.xml"), MB_OK|MB_ICONINFORMATION);
+
+	return TRUE;
 }
 
 void CccConfigDlg::OnBnClickedHelpE()
@@ -248,10 +267,10 @@ void CccConfigDlg::OnBnClickedHelpE()
 
 void CccConfigDlg::OnBnClickedDelete()
 {
-	if (IDYES == MessageBox(_T("Do u want to delete the cc_config.xml?"),
+	if (IDYES == MessageBox(_T("Do u want to delete the ") + m_strFileName + _T("?"),
 		_T("Delete cc_config.xml"), MB_YESNO|MB_ICONQUESTION))
 	{
-		::DeleteFile(UTIL::getDataDir() + _T("cc_config.xml"));
+		::DeleteFile(m_strFileName);
 
 		m_pageLogging.restore();
 		m_pageOption.restore();
@@ -264,4 +283,103 @@ void CccConfigDlg::OnBnClickedDelete()
 void CccConfigDlg::OnBnClickedHelpC()
 {
 	UTIL::openURL(_T("http://www.equn.com/wiki/BOINC:%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"));
+}
+
+void CccConfigDlg::OnBnClickedSplitOpen()
+{
+	m_strFileName = UTIL::getDataDir() + _T("cc_config.xml");
+	if (loadConfigFile())
+		addToRecentFileList(m_strFileName);
+}
+
+void CccConfigDlg::OnFileOpen()
+{
+	static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
+
+	CFileDialog dlg(TRUE, 0, 0, OFN_FILEMUSTEXIST, szFilter);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_strFileName = dlg.GetPathName();
+		if (loadConfigFile())
+			addToRecentFileList(m_strFileName);
+	}
+}
+
+BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
+{
+	int nFileNo = nID - ID_FILE_MRU_FILE1 + 1;
+
+	std::list<CString>::iterator it= m_listRecentFile.begin();
+	while (--nFileNo && it != m_listRecentFile.end())
+		++it;
+
+	if (it == m_listRecentFile.end())
+		return TRUE;
+
+	m_strFileName = *it;
+	if (loadConfigFile())
+		addToRecentFileList(m_strFileName);
+
+	return TRUE;
+}
+
+void CccConfigDlg::updateRecentFileMenu(void)
+{
+	for (int i = 1; i <= MAX_MRU_ITEM; ++i)
+		m_pMenuOpen->DeleteMenu(ID_FILE_MRU_FILE1 + i - 1, MF_BYCOMMAND);
+
+	int i = 1;
+	for (std::list<CString>::iterator it = m_listRecentFile.begin();
+		it != m_listRecentFile.end() && i <= MAX_MRU_ITEM; ++it, ++i)
+	{
+		CString strNo;
+		strNo.Format(_T("%d "), i);
+		m_pMenuOpen->AppendMenu(MF_STRING, ID_FILE_MRU_FILE1 + i - 1, strNo + *it);
+
+	}
+}
+
+void CccConfigDlg::loadRecentFileList(void)
+{
+	for (int i = 1; i <= MAX_MRU_ITEM; ++i)
+	{
+		CString sKeyName;
+		sKeyName.Format(_T("File%d"), i);
+
+		CString sFileName = AfxGetApp()->GetProfileString(_T("Recent File List"), sKeyName, _T(""));
+		if (sFileName.GetLength() == 0)
+			break;
+		m_listRecentFile.push_back(sFileName);
+	}
+
+	updateRecentFileMenu();
+}
+
+void CccConfigDlg::saveRecentFileList(void)
+{
+	int i = 1;
+	CString sKeyName;
+	for (std::list<CString>::iterator it = m_listRecentFile.begin();
+		it != m_listRecentFile.end() && i <= MAX_MRU_ITEM; ++it, ++i)
+	{
+		sKeyName.Format(_T("File%d"), i);
+		AfxGetApp()->WriteProfileString(_T("Recent File List"), sKeyName, *it);
+	}
+}
+
+void CccConfigDlg::PostNcDestroy()
+{
+	saveRecentFileList();
+
+	CDialog::PostNcDestroy();
+}
+
+void CccConfigDlg::addToRecentFileList(const CString& strFileName)
+{
+	std::list<CString>::iterator it = std::find(m_listRecentFile.begin(), m_listRecentFile.end(), strFileName);
+	if (it != m_listRecentFile.end())
+		m_listRecentFile.erase(it);
+	m_listRecentFile.push_front(strFileName);
+
+	updateRecentFileMenu();
 }

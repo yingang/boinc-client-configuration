@@ -13,6 +13,8 @@
 #define IDD_PAGE_OPTION2                131
 #define IDD_PAGE_OPTION3                132
 #define IDD_PAGE_OPTION4                133
+#define IDR_MENU_FILE                   134
+#define IDR_MENU_OPEN                   134
 #define IDC_TABSHEET                    1000
 #define IDC_CHECK_DEBT_DEBUG            1001
 #define IDC_CHECK_REPORT_RESULTS_IMMEDIATELY 1001
@@ -84,6 +86,7 @@
 #define IDC_CHECK_POLL_DEBUG            1020
 #define IDC_CHECK_USE_CERTS_ONLY        1020
 #define IDC_EDIT_START_DELAY            1020
+#define IDC_SPLIT_OPEN                  1020
 #define IDC_CHECK_PROXY_DEBUG           1021
 #define IDC_CHECK_ZERO_DEBTS            1021
 #define IDC_CHECK_RR_SIMULATION         1022
@@ -95,6 +98,12 @@
 #define IDC_CHECK_TIME_DEBUG            1028
 #define IDC_CHECK_TIME_DEBUG2           1029
 #define IDC_CHECK_UNPARSED_XML          1029
+#define ID_OPEN_OPEN                    32771
+#define ID_OPEN_RECENTFILES             32772
+#define CRecentFileList                 32773
+#define ID_OPEN_RECENTFILES32774        32774
+#define ID_RECENTFILES_NONE             32775
+#define ID_OPEN_RECENTFILES32776        32776
 #define ID_HELP2                        57671
 #define ID_HELP_C                       57671
 
@@ -102,9 +111,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1020
+#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_COMMAND_VALUE         32777
+#define _APS_NEXT_CONTROL_VALUE         1021
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

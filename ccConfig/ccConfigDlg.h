@@ -12,6 +12,12 @@
 #include "PageOption3.h"
 #include "PageOption4.h"
 
+#include <list>
+
+#include "afxwin.h"
+
+#define MAX_MRU_ITEM	9
+
 // CccConfigDlg dialog
 class CccConfigDlg : public CDialog
 {
@@ -26,6 +32,19 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 private:
+	void loadRecentFileList(void);
+	void saveRecentFileList(void);
+	void addToRecentFileList(const CString& strFileName);
+
+	void updateRecentFileMenu(void);
+
+	BOOL loadConfigFile(void);
+	void saveConfigFileAs(const CString& strFileName);
+
+	std::list<CString> m_listRecentFile;
+	CString m_strFileName;
+	CMenu* m_pMenuOpen;
+
 	CPageLogging m_pageLogging;
 	CPageOption m_pageOption;
 	CPageOption2 m_pageOption2;
@@ -47,8 +66,14 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedSave();
-	afx_msg void OnBnClickedLoad();
 	afx_msg void OnBnClickedHelpE();
 	afx_msg void OnBnClickedDelete();
 	afx_msg void OnBnClickedHelpC();
+	CButton m_btnLoad;
+	CSplitButton m_sbOpen;
+	afx_msg void OnBnClickedSplitOpen();
+	afx_msg void OnFileOpen(void);
+	afx_msg BOOL OnRecentFileOpen(UINT nID);
+protected:
+	virtual void PostNcDestroy();
 };
