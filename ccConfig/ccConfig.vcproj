@@ -402,6 +402,50 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="XButtonXP"
+			>
+			<File
+				RelativePath="..\XButtonXP\CreateGrayscaleIcon.h"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\OddButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\OddButton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XButtonXP.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XButtonXP.h"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XHyperLink.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XHyperLink.h"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XThemeHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XThemeHelper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\XButtonXP\XTrace.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
