@@ -13,20 +13,20 @@
 #define IDD_PAGE_OPTION2                131
 #define IDD_PAGE_OPTION3                132
 #define IDD_PAGE_OPTION4                133
-#define IDR_MENU_FILE                   134
 #define IDR_MENU_OPEN                   134
 #define IDC_TABSHEET                    1000
 #define IDC_CHECK_DEBT_DEBUG            1001
 #define IDC_CHECK_REPORT_RESULTS_IMMEDIATELY 1001
 #define IDC_CHECK_WORK_FETCH_DEBUG      1002
-#define ID_SAVE                         1002
+#define IDC_BTN_SAVE                    1002
 #define IDC_CHECK_ABORT_JOBS_ON_EXIT    1002
 #define IDC_CHECK_TASK                  1003
-#define ID_DELETE                       1003
+#define IDC_BTN_DELETE                  1003
 #define IDC_CHECK_ALLOW_MULTIPLE_CLIENTS 1003
 #define IDC_CHECK_FILE_XFER             1004
 #define IDC_CHECK_ALLOW_REMOTE_GUI_RPC  1004
 #define IDC_EDIT_ALT_PLATFORM           1004
+#define IDC_BTN_OPEN                    1004
 #define IDC_CHECK_SCHED_OPS             1005
 #define IDC_CHECK_DISABLE_ATTACH        1005
 #define IDC_EDIT_EXCLUSIVE_APP          1005
@@ -82,13 +82,13 @@
 #define IDC_CHECK_NETWORK_STATUS_DEBUG  1019
 #define IDC_CHECK_USE_CERTS             1019
 #define IDC_EDIT_SAVE_STATS_DAYS        1019
-#define ID_HELP_E                       1019
+#define IDC_BTN_HELP                    1019
 #define IDC_CHECK_POLL_DEBUG            1020
 #define IDC_CHECK_USE_CERTS_ONLY        1020
 #define IDC_EDIT_START_DELAY            1020
-#define IDC_SPLIT_OPEN                  1020
 #define IDC_CHECK_PROXY_DEBUG           1021
 #define IDC_CHECK_ZERO_DEBTS            1021
+#define IDC_BUTTON1                     1021
 #define IDC_CHECK_RR_SIMULATION         1022
 #define IDC_CHECK_SCHED_OP_DEBUG        1023
 #define IDC_CHECK_SCRSAVE_DEBUG         1024
@@ -113,7 +113,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32777
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_CONTROL_VALUE         1023
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -11,6 +11,7 @@
 #include "PageOption2.h"
 #include "PageOption3.h"
 #include "PageOption4.h"
+#include "..\XButtonXP\XButtonXP.h"
 
 #include <list>
 
@@ -41,9 +42,12 @@ private:
 	BOOL loadConfigFile(void);
 	void saveConfigFileAs(const CString& strFileName);
 
+	void initPopupMenu(void);
+
 	std::list<CString> m_listRecentFile;
 	CString m_strFileName;
 	CMenu* m_pMenuOpen;
+	CMenu* m_pMenuHelp;
 
 	CPageLogging m_pageLogging;
 	CPageOption m_pageOption;
@@ -57,23 +61,22 @@ protected:
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
+	virtual void PostNcDestroy();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
 	CTabSheet m_tabSheet;
+	CXButtonXP m_btnOpen;
+	CXButtonXP m_btnHelp;
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedSave();
-	afx_msg void OnBnClickedHelpE();
+	afx_msg void OnBnClickedHelp();
 	afx_msg void OnBnClickedDelete();
-	afx_msg void OnBnClickedHelpC();
-	CButton m_btnLoad;
-	CSplitButton m_sbOpen;
-	afx_msg void OnBnClickedSplitOpen();
+	afx_msg void OnBnClickedOpen();
 	afx_msg void OnFileOpen(void);
 	afx_msg BOOL OnRecentFileOpen(UINT nID);
-protected:
-	virtual void PostNcDestroy();
+	afx_msg BOOL OnPopupMenuClicked(UINT nID);
 };

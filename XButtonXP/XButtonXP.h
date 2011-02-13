@@ -104,6 +104,18 @@ public:
 		return *this; 
 	}
 
+	CXButtonXP& SetParentWnd(CWnd* pWnd)
+	{
+		if (pWnd)
+			m_pParentWnd = pWnd;
+		return *this;
+	}
+	CXButtonXP& SetDropDownMenu(CMenu* pMenu)
+	{
+		if (pMenu)
+			m_pDropDownMenu = pMenu;
+		return *this;
+	}
 
 //=============================================================================
 // Operations
@@ -140,6 +152,18 @@ protected:
 				  BOOL bIsThemed,
 				  BOOL bIsDisabled);
 
+	void DrawArrow(CDC *pDC,
+				   CRect& rect,
+				   BOOL bIsPressed,
+				   BOOL bIsThemed,
+				   BOOL bIsDisabled);
+
+	void DrawSplit(CDC *pDC,
+				   CRect& rect,
+				   BOOL bIsPressed,
+				   BOOL bIsThemed,
+				   BOOL bIsDisabled);
+
 	void PrepareImageRect(BOOL bHasText, 
 						  CRect& rectItem, 
 						  CRect& rectText, 
@@ -150,6 +174,8 @@ protected:
 						  CRect& rectImage);
 
 	void SaveParentBackground();
+
+	BOOL HitMenuBtn(CPoint pt);
 
 	BOOL			m_bFirstTime;
 	BOOL			m_bMouseOverButton;
@@ -173,11 +199,14 @@ protected:
 	COLORREF		m_crText;			// optional button text color -
 										// when a background color is specified,
 										// theming is switched off
+	CWnd*			m_pParentWnd;
+	CMenu*			m_pDropDownMenu;
 
 //=============================================================================
 // Generated message map functions
 //=============================================================================
 	//{{AFX_MSG(CXButtonXP)
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	//}}AFX_MSG

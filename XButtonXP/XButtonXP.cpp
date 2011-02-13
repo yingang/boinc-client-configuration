@@ -120,11 +120,14 @@ static char THIS_FILE[] = __FILE__;
 #define WM_THEMECHANGED     0x031A
 #endif
 
+const int MENUBTN_WIDTH = 20;
+
 //=============================================================================	
 BEGIN_MESSAGE_MAP(CXButtonXP, COddButton)
 //=============================================================================	
 	//{{AFX_MSG_MAP(CXButtonXP)
 	ON_WM_ERASEBKGND()
+	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_MOUSELEAVE, OnMouseLeave)
@@ -149,6 +152,8 @@ CXButtonXP::CXButtonXP()
 	m_pOldParentBitmap = NULL;
 	m_crBackground     = XBUTTONXP_NO_COLOR;
 	m_crText           = XBUTTONXP_NO_COLOR;
+	m_pParentWnd       = NULL;
+	m_pDropDownMenu    = NULL;
 }
 
 //=============================================================================	
@@ -349,6 +354,22 @@ void CXButtonXP::SaveParentBackground()
 }
 
 //=============================================================================	
+BOOL CXButtonXP::HitMenuBtn(CPoint pt)
+//=============================================================================	
+{
+	if (!m_pDropDownMenu)
+		return FALSE;
+
+	ClientToScreen(&pt);
+
+	CRect rect;
+	GetWindowRect(rect);
+	rect.left = rect.right - MENUBTN_WIDTH;
+
+	return rect.PtInRect(pt);    
+}
+
+//=============================================================================	
 void CXButtonXP::DrawIcon(CDC *pDC,
 						  BOOL bHasText,
 						  CRect& rectItem,		// from LPDRAWITEMSTRUCT
@@ -433,6 +454,8 @@ void CXButtonXP::DrawText(CDC *pDC,
 
 	// center text vertically (DT_VCENTER does not work if BS_MULTILINE is set)
 	CRect rectText = rectDraw;
+	if (m_pDropDownMenu)
+		rectText.right -= MENUBTN_WIDTH;
 	pDC->DrawText(lpszText, -1, &rectDraw, uTextAlignment | DT_CALCRECT);
 
 	rectDraw.OffsetRect((rectText.Width() - rectDraw.Width())/2, 
@@ -464,6 +487,66 @@ void CXButtonXP::DrawText(CDC *pDC,
 						bIsDisabled ? PBS_DISABLED : PBS_NORMAL,
 						lpszText, uTextAlignment, 0, &rectDraw);
 	}
+}
+
+//=============================================================================	
+void CXButtonXP::DrawArrow(CDC *pDC,
+						   CRect& rect,
+						   BOOL bIsPressed,
+						   BOOL bIsThemed,
+						   BOOL bIsDisabled)
+//=============================================================================	
+{
+	CPoint ptTip, ptDest;
+	ptTip.x = rect.right - MENUBTN_WIDTH / 2;
+	ptTip.y = (rect.bottom + rect.top) / 2 + 2;
+
+	CPen* pPen = pDC->GetCurrentPen();
+	LOGPEN logPen;
+	pPen->GetLogPen(&logPen);
+	pDC->SetPixel(ptTip, logPen.lopnColor);
+
+	ptTip -= CPoint(1,1);
+	pDC->MoveTo(ptTip);
+
+	ptDest = ptTip;
+	ptDest += CPoint(3,0);
+	pDC->LineTo(ptDest);
+
+	ptTip -= CPoint(1,1);
+	pDC->MoveTo(ptTip);
+
+	ptDest = ptTip;
+	ptDest += CPoint(5,0);
+	pDC->LineTo(ptDest);
+
+	ptTip -= CPoint(1,1);
+	pDC->MoveTo(ptTip);
+
+	ptDest = ptTip;
+	ptDest += CPoint(7,0);
+	pDC->LineTo(ptDest);
+}
+
+//=============================================================================	
+void CXButtonXP::DrawSplit(CDC *pDC,
+						   CRect& rect,
+						   BOOL bIsPressed,
+						   BOOL bIsThemed,
+						   BOOL bIsDisabled)
+//=============================================================================	
+{
+	CPen brFace(PS_SOLID,1,GetSysColor(COLOR_3DSHADOW));
+	CPen* penOld = pDC->SelectObject(&brFace);
+	pDC->MoveTo(rect.right - MENUBTN_WIDTH, rect.top + 3);
+	pDC->LineTo(rect.right - MENUBTN_WIDTH, rect.bottom - 3);
+
+	CPen brLite(PS_SOLID,1,GetSysColor(COLOR_3DHILIGHT));
+	pDC->SelectObject(&brLite);
+	pDC->MoveTo(rect.right - MENUBTN_WIDTH + 1, rect.top + 3);
+	pDC->LineTo(rect.right - MENUBTN_WIDTH + 1, rect.bottom - 3);
+
+	pDC->SelectObject(penOld);
 }
 
 //=============================================================================	
@@ -575,7 +658,7 @@ void CXButtonXP::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 				state = PBS_HOT;
 		}
 
-		ThemeHelper.DrawThemeParentBackground(::GetParent(m_hWnd), memDC.m_hDC, &rectItem);
+		ThemeHelper.DrawThemeParentBackground(m_hWnd, memDC.m_hDC, &rectItem);
 
 		ThemeHelper.DrawThemeBackground(m_hTheme, memDC.m_hDC, BP_PUSHBUTTON, state, &rectItem, NULL);
 	}
@@ -633,8 +716,16 @@ void CXButtonXP::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 	if (bIsFocused && bDrawFocusRect)
 	{
 		CRect rectFocus = rectItem;
+		if (m_pDropDownMenu)
+			rectFocus.right = rectFocus.right - MENUBTN_WIDTH + 1;
 		rectFocus.InflateRect(-3, -3);
 		memDC.DrawFocusRect(&rectFocus);
+	}
+
+	if (m_pDropDownMenu)
+	{
+		DrawSplit(&memDC, rectItem, bIsPressed, bIsThemed, bIsDisabled);
+		DrawArrow(&memDC, rectItem, bIsPressed, bIsThemed, bIsDisabled);
 	}
 
 	// end double buffering
@@ -750,8 +841,8 @@ LRESULT CXButtonXP::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				SendMessage(BM_SETSTATE, 1);
-				m_bSent = TRUE;
+//				SendMessage(BM_SETSTATE, 1);
+//				m_bSent = TRUE;
 			}
 			return 0;
 		}
@@ -773,6 +864,24 @@ LRESULT CXButtonXP::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return COddButton::DefWindowProc(message, wParam, lParam);
+}
+
+//=============================================================================	
+void CXButtonXP::OnLButtonUp(UINT nFlags, CPoint point)
+//=============================================================================	
+{
+	if (HitMenuBtn(point))
+	{
+		CRect rect;
+		GetWindowRect(rect);
+
+		if (m_pParentWnd)
+			m_pDropDownMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, rect.left, rect.bottom, m_pParentWnd);
+	}
+	else
+	{
+		CButton::OnLButtonUp(nFlags, point);
+	}
 }
 
 //=============================================================================	

@@ -83,7 +83,7 @@ CAPTION "About ccConfig"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "BOINC Client Configuration, v1.0",IDC_STATIC,42,14,125,8,SS_NOPREFIX
+    LTEXT           "BOINC Client Configuration, v1.1.1",IDC_STATIC,42,14,125,8,SS_NOPREFIX
     LTEXT           "(c) 2011 Yin Gang. All rights reserved.",IDC_STATIC,42,30,139,8
     DEFPUSHBUTTON   "OK",IDOK,131,47,50,14,WS_GROUP
 END
@@ -94,13 +94,12 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "BOINC Client Configuration"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "?&E",ID_HELP_E,7,215,21,14
-    PUSHBUTTON      "?&C",ID_HELP_C,29,215,21,14
-    PUSHBUTTON      "&Delete",ID_DELETE,85,214,50,15
-    PUSHBUTTON      "&Save",ID_SAVE,139,215,50,14
+    PUSHBUTTON      "&Help",IDC_BTN_HELP,7,215,50,14
+    PUSHBUTTON      "&Delete",IDC_BTN_DELETE,87,215,50,14
+    PUSHBUTTON      "&Save",IDC_BTN_SAVE,141,215,50,14
+    PUSHBUTTON      "&Open",IDC_BTN_OPEN,195,215,50,14
     PUSHBUTTON      "E&xit",IDCANCEL,280,215,50,14
     CONTROL         "",IDC_TABSHEET,"SysTabControl32",WS_TABSTOP,7,7,323,200
-    CONTROL         "&Open",IDC_SPLIT_OPEN,"Button",BS_SPLITBUTTON | WS_TABSTOP,193,215,50,14
 END
 
 IDD_PAGE_OPTION DIALOGEX 0, 0, 316, 183
@@ -261,7 +260,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,3
+ FILEVERSION 1,1,1,4
  PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -279,7 +278,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Yin Gang"
             VALUE "FileDescription", "BOINC Client Configuration"
-            VALUE "FileVersion", "1, 1, 0, 3"
+            VALUE "FileVersion", "1, 1, 1, 4"
             VALUE "InternalName", "ccConfig.exe"
             VALUE "LegalCopyright", "(c) 2011 Yin Gang. All rights reserved."
             VALUE "OriginalFilename", "ccConfig.exe"

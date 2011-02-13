@@ -13,7 +13,7 @@
 // CccConfigApp
 
 BEGIN_MESSAGE_MAP(CccConfigApp, CWinApp)
-	ON_COMMAND(ID_HELP_E, &CWinApp::OnHelp)
+	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
