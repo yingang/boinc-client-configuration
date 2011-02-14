@@ -47,9 +47,11 @@ END_MESSAGE_MAP()
 
 // CccConfigDlg dialog
 
-#define ID_MYMENU			0x8000
-#define ID_MYMENU_HELP_E	0x8001
-#define ID_MYMENU_HELP_C	0x8002
+#define ID_MYMENU				0x8000
+#define ID_MYMENU_HELP_ENG		0x8001
+#define ID_MYMENU_HELP_CHS		0x8002
+#define ID_MYMENU_HELP_WEBSITE	0x8010
+#define ID_MYMENU_HELP_EMAIL	0x8011
 
 CccConfigDlg::CccConfigDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CccConfigDlg::IDD, pParent)
@@ -113,11 +115,11 @@ BOOL CccConfigDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	m_tabSheet.AddPage(_T("Logging Flags"), &m_pageLogging, IDD_PAGE_LOGGING);
+	m_tabSheet.AddPage(_T("Logging"), &m_pageLogging, IDD_PAGE_LOGGING);
 	m_tabSheet.AddPage(_T("Options1"), &m_pageOption, IDD_PAGE_OPTION);
 	m_tabSheet.AddPage(_T("Options2"), &m_pageOption2, IDD_PAGE_OPTION2);
 	m_tabSheet.AddPage(_T("Options3"), &m_pageOption3, IDD_PAGE_OPTION3);
-	m_tabSheet.AddPage(_T("Options4"), &m_pageOption4, IDD_PAGE_OPTION4);
+	m_tabSheet.AddPage(_T("Proxy"), &m_pageOption4, IDD_PAGE_OPTION4);
 	m_tabSheet.Show();
 
 	initPopupMenu();
@@ -197,6 +199,8 @@ void CccConfigDlg::OnBnClickedOk()
 void CccConfigDlg::OnBnClickedSave()
 {
 	saveConfigFileAs(m_strFileName);
+
+	applyConfigFile();
 }
 
 void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
@@ -221,13 +225,54 @@ void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
 
 	doc.LinkEndChild(pRoot);
 	doc.SaveFile(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
-
-	MessageBox(m_strFileName + _T(" has been modified, ")
-			+ _T("please re-read it in BOINC Manager (5.8.2+) or restart boinc.exe (prior 5.8.2)."),
-		_T("Save cc_config.xml"), MB_OK|MB_ICONINFORMATION);
 }
 
-BOOL CccConfigDlg::loadConfigFile()
+void CccConfigDlg::applyConfigFile(void)
+{
+	UINT uDriveType = getConfigFileLocation();
+
+	if (uDriveType == DRIVE_FIXED)
+	{
+		CString strDataDir = UTIL::getBOINCDataDir();
+		if (strDataDir.GetLength() == 0
+			|| m_strFileName.Left(strDataDir.GetLength()) != strDataDir)
+			return;	// it's not the local in-use file
+
+		CString strCmdPath = UTIL::getBOINCInstallDir() + _T("boinccmd.exe");
+		CFileFind ff;
+		if (FALSE == ff.FindFile(strCmdPath))
+			return; // failed to locate the local boinccmd.exe
+
+		::ShellExecute(AfxGetMainWnd()->m_hWnd,
+			_T("open"),
+			strCmdPath,
+			_T("--read_cc_config"),
+			_T(""),
+			SW_SHOW);
+	}
+	else if (uDriveType == DRIVE_REMOTE)
+	{
+		MessageBox(m_strFileName + _T(" has been modified, ")
+			+ _T("please re-read it in BOINC Manager (5.8.2+) or restart boinc.exe (prior 5.8.2)."),
+			_T("Save cc_config.xml"), MB_OK|MB_ICONINFORMATION);
+	}
+}
+
+UINT CccConfigDlg::getConfigFileLocation(void)
+{
+	if (m_strFileName.GetLength() < 3)
+		return DRIVE_UNKNOWN;
+
+	if (m_strFileName.Left(2) == _T("\\\\"))
+		return DRIVE_REMOTE;
+
+	if (m_strFileName.Mid(1, 2) != _T(":\\"))
+		return DRIVE_UNKNOWN;
+
+	return ::GetDriveType(m_strFileName.Left(3));
+}
+
+BOOL CccConfigDlg::loadConfigFile(void)
 {
 	TiXmlDocument hXMLDoc(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
 	if (!hXMLDoc.LoadFile())
@@ -288,7 +333,7 @@ void CccConfigDlg::OnBnClickedDelete()
 
 void CccConfigDlg::OnBnClickedOpen()
 {
-	m_strFileName = UTIL::getDataDir() + _T("cc_config.xml");
+	m_strFileName = UTIL::getBOINCDataDir() + _T("cc_config.xml");
 	if (loadConfigFile())
 		addToRecentFileList(m_strFileName);
 }
@@ -394,19 +439,28 @@ void CccConfigDlg::initPopupMenu(void)
 
 	m_pMenuHelp = new CMenu();
 	m_pMenuHelp->CreatePopupMenu();
-	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_E, _T("English"));
-	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_C, _T("Chinese"));
+	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_ENG, _T("English"));
+	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_CHS, _T("Chinese"));
+	m_pMenuHelp->AppendMenu(MF_SEPARATOR);
+	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_WEBSITE, _T("Project Website"));
+	m_pMenuHelp->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_HELP_EMAIL, _T("Email to Author"));
 }
 
 BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 {
 	switch (nID)
 	{
-	case ID_MYMENU_HELP_E:
+	case ID_MYMENU_HELP_ENG:
 		OnBnClickedHelp();
 		break;
-	case ID_MYMENU_HELP_C:
+	case ID_MYMENU_HELP_CHS:
 		UTIL::openURL(_T("http://www.equn.com/wiki/BOINC:%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"));
+		break;
+	case ID_MYMENU_HELP_WEBSITE:
+		UTIL::openURL(_T("http://code.google.com/p/boinc-client-configuration/"));
+		break;
+	case ID_MYMENU_HELP_EMAIL:
+		UTIL::openURL(_T("mailto://zenith.yin@gmail.com"));
 		break;
 	default:
 		break;

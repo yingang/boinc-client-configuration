@@ -35,7 +35,7 @@ std::string UTIL::convertToMultiChar(const std::wstring& str)
 	return strText;
 }
 
-CString UTIL::getDataDir(void)
+BOOL UTIL::getBOINCSetup(const CString& strKey, CString& strValue)
 {
 	HKEY hKey;
 	LONG lResult = ::RegOpenKeyEx(HKEY_LOCAL_MACHINE,
@@ -45,23 +45,38 @@ CString UTIL::getDataDir(void)
 		&hKey);
 
 	if (lResult != ERROR_SUCCESS)
-		return _T("");
+		return FALSE;
 
 	DWORD dwBufSize = 8192;
 	TCHAR* pData = new TCHAR[dwBufSize];
 
 	DWORD dwType = REG_SZ;
 	DWORD cbData = dwBufSize;
-	DWORD dwRet = ::RegQueryValueEx(hKey, _T("DATADIR"), NULL, &dwType, (LPBYTE)pData, &cbData);
+	DWORD dwRet = ::RegQueryValueEx(hKey, strKey, NULL, &dwType, (LPBYTE)pData, &cbData);
 
 	if (dwRet != ERROR_SUCCESS/* || dwRet == ERROR_MORE_DATA*/)
-	{
-		dwRet = ::RegQueryValueEx(hKey, _T("INSTALLDIR"), NULL, &dwType, (LPBYTE)pData, &cbData);
-		if (dwRet != ERROR_SUCCESS)
-			return _T("");
-	}
+		return FALSE;
 
-	return pData;
+	strValue = pData;
+	return TRUE;
+}
+
+CString UTIL::getBOINCDataDir(void)
+{
+	CString strDir;
+	if (getBOINCSetup(_T("DATADIR"), strDir))
+		return strDir;
+	else
+		return getBOINCInstallDir();
+}
+
+CString UTIL::getBOINCInstallDir(void)
+{
+	CString strDir;
+	if (getBOINCSetup(_T("INSTALLDIR"), strDir))
+		return strDir;
+	else
+		return _T("");
 }
 
 void UTIL::splitString(const CString& strSrc, const CString& strElem, std::vector<CString>& vStrings)

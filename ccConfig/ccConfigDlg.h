@@ -41,6 +41,9 @@ private:
 
 	BOOL loadConfigFile(void);
 	void saveConfigFileAs(const CString& strFileName);
+	void applyConfigFile(void);
+
+	UINT getConfigFileLocation(void);
 
 	void initPopupMenu(void);
 
