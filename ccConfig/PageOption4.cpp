@@ -110,3 +110,12 @@ void CPageOption4::initOption(void)
 	m_mapText["socks5_user_passwd"] = std::make_pair(IDC_EDIT_SOCKS5_USER_PASSWD, PF_NORMAL);
 	m_mapText["no_proxy"] = std::make_pair(IDC_EDIT_NO_PROXY, PF_NORMAL);
 }
+
+void CPageOption4::enable(BOOL bEnabled)
+{
+	for (std::map<std::string, std::pair<int, int> >::iterator it = m_mapText.begin();
+		it != m_mapText.end(); ++it)
+	{
+		GetDlgItem(it->second.first)->EnableWindow(bEnabled);
+	}
+}

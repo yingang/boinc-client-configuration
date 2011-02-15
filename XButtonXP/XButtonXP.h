@@ -153,13 +153,13 @@ protected:
 				  BOOL bIsDisabled);
 
 	void DrawArrow(CDC *pDC,
-				   CRect& rect,
+				   const CRect& rect,
 				   BOOL bIsPressed,
 				   BOOL bIsThemed,
 				   BOOL bIsDisabled);
 
 	void DrawSplit(CDC *pDC,
-				   CRect& rect,
+				   const CRect& rect,
 				   BOOL bIsPressed,
 				   BOOL bIsThemed,
 				   BOOL bIsDisabled);

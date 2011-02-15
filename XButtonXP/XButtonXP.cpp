@@ -491,15 +491,26 @@ void CXButtonXP::DrawText(CDC *pDC,
 
 //=============================================================================	
 void CXButtonXP::DrawArrow(CDC *pDC,
-						   CRect& rect,
+						   const CRect& rect,
 						   BOOL bIsPressed,
 						   BOOL bIsThemed,
 						   BOOL bIsDisabled)
 //=============================================================================	
 {
+	CPen pen;
+	CPen* penOld = NULL;
+	if (bIsDisabled)
+	{
+		pen.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+		penOld = pDC->SelectObject(&pen);
+	}
+
 	CPoint ptTip, ptDest;
 	ptTip.x = rect.right - MENUBTN_WIDTH / 2;
-	ptTip.y = (rect.bottom + rect.top) / 2 + 2;
+	ptTip.y = (rect.bottom + rect.top) / 2 + 1;
+
+	if (!bIsThemed && bIsPressed)
+		ptTip.Offset(1, 1);
 
 	CPen* pPen = pDC->GetCurrentPen();
 	LOGPEN logPen;
@@ -526,25 +537,32 @@ void CXButtonXP::DrawArrow(CDC *pDC,
 	ptDest = ptTip;
 	ptDest += CPoint(7,0);
 	pDC->LineTo(ptDest);
+
+	if (penOld)
+		pDC->SelectObject(penOld);
 }
 
 //=============================================================================	
 void CXButtonXP::DrawSplit(CDC *pDC,
-						   CRect& rect,
+						   const CRect& rect,
 						   BOOL bIsPressed,
 						   BOOL bIsThemed,
 						   BOOL bIsDisabled)
 //=============================================================================	
 {
-	CPen brFace(PS_SOLID,1,GetSysColor(COLOR_3DSHADOW));
-	CPen* penOld = pDC->SelectObject(&brFace);
-	pDC->MoveTo(rect.right - MENUBTN_WIDTH, rect.top + 3);
-	pDC->LineTo(rect.right - MENUBTN_WIDTH, rect.bottom - 3);
+	CRect rectDraw(rect);
+	if (!bIsThemed && bIsPressed)
+		rectDraw.OffsetRect(1, 1);
 
-	CPen brLite(PS_SOLID,1,GetSysColor(COLOR_3DHILIGHT));
+	CPen brFace(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+	CPen* penOld = pDC->SelectObject(&brFace);
+	pDC->MoveTo(rectDraw.right - MENUBTN_WIDTH, rectDraw.top + 3);
+	pDC->LineTo(rectDraw.right - MENUBTN_WIDTH, rectDraw.bottom - 3);
+
+	CPen brLite(PS_SOLID, 1, GetSysColor(COLOR_3DHILIGHT));
 	pDC->SelectObject(&brLite);
-	pDC->MoveTo(rect.right - MENUBTN_WIDTH + 1, rect.top + 3);
-	pDC->LineTo(rect.right - MENUBTN_WIDTH + 1, rect.bottom - 3);
+	pDC->MoveTo(rectDraw.right - MENUBTN_WIDTH + 1, rectDraw.top + 3);
+	pDC->LineTo(rectDraw.right - MENUBTN_WIDTH + 1, rectDraw.bottom - 3);
 
 	pDC->SelectObject(penOld);
 }
@@ -718,6 +736,8 @@ void CXButtonXP::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 		CRect rectFocus = rectItem;
 		if (m_pDropDownMenu)
 			rectFocus.right = rectFocus.right - MENUBTN_WIDTH + 1;
+		if (!bIsThemed && bIsPressed)
+			rectFocus.OffsetRect(1, 1);
 		rectFocus.InflateRect(-3, -3);
 		memDC.DrawFocusRect(&rectFocus);
 	}

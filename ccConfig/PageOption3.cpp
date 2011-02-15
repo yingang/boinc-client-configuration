@@ -146,3 +146,12 @@ void CPageOption3::initOption(void)
 	m_mapOption["save_stats_days"] = std::make_pair(IDC_EDIT_SAVE_STATS_DAYS, NT_POSITIVE);
 	m_mapOption["start_delay"] = std::make_pair(IDC_EDIT_START_DELAY, NT_POSITIVE);
 }
+
+void CPageOption3::enable(BOOL bEnabled)
+{
+	for (std::map<std::string, std::pair<int, int> >::iterator it = m_mapOption.begin();
+		it != m_mapOption.end(); ++it)
+	{
+		GetDlgItem(it->second.first)->EnableWindow(bEnabled);
+	}
+}

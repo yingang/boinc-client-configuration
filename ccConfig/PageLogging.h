@@ -23,11 +23,13 @@ private:
 	BOOL isDefaultSet(int nID);
 
 	std::map<std::string, int> m_mapLogging;
+	CToolTipCtrl m_tooltip;
 
 public:
 	void saveToXML(TiXmlElement* pParent);
 	void loadFromXML(TiXmlElement* pParent);
 	void restore(void);
+	void enable(BOOL bEnabled);
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -37,4 +39,5 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

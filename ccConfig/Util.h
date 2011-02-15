@@ -10,12 +10,6 @@ namespace UTIL
 
 	std::string convertToMultiChar(const std::wstring& str);
 
-	BOOL getBOINCSetup(const CString& strKey, CString& strValue);
-
-	CString getBOINCDataDir(void);
-
-	CString getBOINCInstallDir(void);
-
 	void splitString(const CString& strSrc, const CString& strElem, std::vector<CString>& vStrings);
 
 	void addTiXMLChild(TiXmlElement* pParent, const std::string& sTagName, const std::string& sTagValue);
@@ -27,4 +21,6 @@ namespace UTIL
 	std::string formatNum(const std::string& sFmt, int n);
 
 	void openURL(const CString& strURL);
+
+	BOOL doesFileExist(const CString& strFilePath);
 };

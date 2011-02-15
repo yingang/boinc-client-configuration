@@ -26,6 +26,7 @@ public:
 	void saveToXML(TiXmlElement* pParent);
 	void loadFromXML(TiXmlElement* pParent);
 	void restore(void);
+	void enable(BOOL bEnabled);
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

@@ -36,6 +36,7 @@ private:
 	void loadRecentFileList(void);
 	void saveRecentFileList(void);
 	void addToRecentFileList(const CString& strFileName);
+	void removeFromRecentFileList(const CString& strFileName, BOOL bRefresh = TRUE);
 
 	void updateRecentFileMenu(void);
 
@@ -46,11 +47,16 @@ private:
 	UINT getConfigFileLocation(void);
 
 	void initPopupMenu(void);
+	BOOL setToolTipIconAndTitle(CToolTipCtrl* pToolTip, int tti, const CString& strTitle);
+	void updateUIState(void);
+	void enableOptionPages(BOOL bEnabled);
 
 	std::list<CString> m_listRecentFile;
 	CString m_strFileName;
 	CMenu* m_pMenuOpen;
+	CMenu* m_pMenuSave;
 	CMenu* m_pMenuHelp;
+	CToolTipCtrl m_tooltip;
 
 	CPageLogging m_pageLogging;
 	CPageOption m_pageOption;
@@ -72,6 +78,7 @@ protected:
 public:
 	CTabSheet m_tabSheet;
 	CXButtonXP m_btnOpen;
+	CXButtonXP m_btnSave;
 	CXButtonXP m_btnHelp;
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
@@ -79,7 +86,7 @@ public:
 	afx_msg void OnBnClickedHelp();
 	afx_msg void OnBnClickedDelete();
 	afx_msg void OnBnClickedOpen();
-	afx_msg void OnFileOpen(void);
 	afx_msg BOOL OnRecentFileOpen(UINT nID);
 	afx_msg BOOL OnPopupMenuClicked(UINT nID);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

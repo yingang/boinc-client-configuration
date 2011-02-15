@@ -131,3 +131,12 @@ BOOL CPageOption::isDefaultSet(int nID)
 {
 	return FALSE;
 }
+
+void CPageOption::enable(BOOL bEnabled)
+{
+	for (std::map<std::string, int>::iterator it = m_mapOption.begin();
+		it != m_mapOption.end(); ++it)
+	{
+		GetDlgItem(it->second)->EnableWindow(bEnabled);
+	}
+}

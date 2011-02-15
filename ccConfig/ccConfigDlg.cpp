@@ -7,6 +7,7 @@
 #include "ccConfigDlg.h"
 
 #include "Util.h"
+#include "BOINC.h"
 #include "tinyxml.h"
 
 #include <algorithm>
@@ -52,11 +53,17 @@ END_MESSAGE_MAP()
 #define ID_MYMENU_HELP_CHS		0x8002
 #define ID_MYMENU_HELP_WEBSITE	0x8010
 #define ID_MYMENU_HELP_EMAIL	0x8011
+#define ID_MYMENU_SAVE_AS		0x8020
+#define ID_MYMENU_FILE_OPEN		0x8021
 
 CccConfigDlg::CccConfigDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CccConfigDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	m_pMenuOpen = NULL;
+	m_pMenuSave = NULL;
+	m_pMenuHelp = NULL;
 }
 
 void CccConfigDlg::DoDataExchange(CDataExchange* pDX)
@@ -65,6 +72,7 @@ void CccConfigDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TABSHEET, m_tabSheet);
 	DDX_Control(pDX, IDC_BTN_OPEN, m_btnOpen);
 	DDX_Control(pDX, IDC_BTN_HELP, m_btnHelp);
+	DDX_Control(pDX, IDC_BTN_SAVE, m_btnSave);
 }
 
 BEGIN_MESSAGE_MAP(CccConfigDlg, CDialog)
@@ -78,7 +86,6 @@ BEGIN_MESSAGE_MAP(CccConfigDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_HELP, &CccConfigDlg::OnBnClickedHelp)
 	ON_BN_CLICKED(IDC_BTN_DELETE, &CccConfigDlg::OnBnClickedDelete)
 	ON_BN_CLICKED(IDC_BTN_OPEN, &CccConfigDlg::OnBnClickedOpen)
-	ON_COMMAND(ID_FILE_OPEN, &CccConfigDlg::OnFileOpen)
 	ON_COMMAND_EX_RANGE(ID_FILE_MRU_FILE1, ID_FILE_MRU_FILE16, CccConfigDlg::OnRecentFileOpen)
 	ON_COMMAND_EX_RANGE(ID_MYMENU, ID_MYMENU + 100, CccConfigDlg::OnPopupMenuClicked)
 END_MESSAGE_MAP()
@@ -128,8 +135,17 @@ BOOL CccConfigDlg::OnInitDialog()
 		.SetDropDownMenu(m_pMenuOpen);
 	loadRecentFileList();
 
+	m_btnSave.SetParentWnd(this)
+		.SetDropDownMenu(m_pMenuSave);
+
 	m_btnHelp.SetParentWnd(this)
 		.SetDropDownMenu(m_pMenuHelp);
+
+	m_tooltip.Create(this, TTS_NOPREFIX | TTS_BALLOON);
+	m_tooltip.AddTool(GetDlgItem(IDC_BTN_HELP), _T("Browse online documentation for all those options."));
+	m_tooltip.AddTool(GetDlgItem(IDC_BTN_DELETE), _T("Delete currently loaded cc_config.xml."));
+	m_tooltip.AddTool(GetDlgItem(IDC_BTN_SAVE), _T("Save and apply currently loaded cc_config.xml."));
+	m_tooltip.AddTool(GetDlgItem(IDC_BTN_OPEN), _T("Open the local in-use cc_config.xml."));
 
 	OnBnClickedOpen();
 
@@ -229,19 +245,17 @@ void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
 
 void CccConfigDlg::applyConfigFile(void)
 {
-	UINT uDriveType = getConfigFileLocation();
+	CString strCmdPath = BOINC::getInstallDir() + _T("boinccmd.exe");
+	if (!UTIL::doesFileExist(strCmdPath))
+		return; // failed to locate the local boinccmd.exe
 
+	UINT uDriveType = getConfigFileLocation();
 	if (uDriveType == DRIVE_FIXED)
 	{
-		CString strDataDir = UTIL::getBOINCDataDir();
+		CString strDataDir = BOINC::getDataDir();
 		if (strDataDir.GetLength() == 0
 			|| m_strFileName.Left(strDataDir.GetLength()) != strDataDir)
 			return;	// it's not the local in-use file
-
-		CString strCmdPath = UTIL::getBOINCInstallDir() + _T("boinccmd.exe");
-		CFileFind ff;
-		if (FALSE == ff.FindFile(strCmdPath))
-			return; // failed to locate the local boinccmd.exe
 
 		::ShellExecute(AfxGetMainWnd()->m_hWnd,
 			_T("open"),
@@ -252,9 +266,32 @@ void CccConfigDlg::applyConfigFile(void)
 	}
 	else if (uDriveType == DRIVE_REMOTE)
 	{
+		CString strPwd;
+		if (!BOINC::getAuthPwd(m_strFileName.Left(m_strFileName.ReverseFind('\\') + 1), strPwd))
+		{
+			MessageBox(_T("Failed to access the remote gui_rpc_auth.cfg."),
+				_T("Apply cc_config.xml"), MB_OK|MB_ICONERROR);
+			return;
+		}
+
+		if (m_strFileName.Left(2) != _T("\\\\"))
+			return;	// can't figure out the remote hostname
+
+		CString strHostName = m_strFileName.Mid(2, m_strFileName.Find(_T("\\"), 2) - 2);
+
+		::ShellExecute(AfxGetMainWnd()->m_hWnd,
+			_T("open"),
+			strCmdPath,
+			_T("--host ") + strHostName + _T(" --passwd ") + strPwd + _T(" --read_cc_config"),
+			_T(""),
+			SW_SHOW);
+
 		MessageBox(m_strFileName + _T(" has been modified, ")
-			+ _T("please re-read it in BOINC Manager (5.8.2+) or restart boinc.exe (prior 5.8.2)."),
-			_T("Save cc_config.xml"), MB_OK|MB_ICONINFORMATION);
+			_T("please check the remote client log to see if the new configuation has been applied.\n\n")
+			_T("If it's not, please check the remote machine:\n")
+			_T("1. firewall setting (port 31416 must be unblocked)\n")
+			_T("2. remote_hosts.cfg (local machine's ip/hostname must be added."),
+			_T("Apply cc_config.xml"), MB_OK|MB_ICONINFORMATION);
 	}
 }
 
@@ -321,7 +358,12 @@ void CccConfigDlg::OnBnClickedDelete()
 	if (IDYES == MessageBox(_T("Do u want to delete the ") + m_strFileName + _T("?"),
 		_T("Delete cc_config.xml"), MB_YESNO|MB_ICONQUESTION))
 	{
+		removeFromRecentFileList(m_strFileName);
 		::DeleteFile(m_strFileName);
+		applyConfigFile();
+
+		m_strFileName = _T("");
+		updateUIState();
 
 		m_pageLogging.restore();
 		m_pageOption.restore();
@@ -333,22 +375,13 @@ void CccConfigDlg::OnBnClickedDelete()
 
 void CccConfigDlg::OnBnClickedOpen()
 {
-	m_strFileName = UTIL::getBOINCDataDir() + _T("cc_config.xml");
+	m_strFileName = BOINC::getDataDir() + _T("cc_config.xml");
 	if (loadConfigFile())
 		addToRecentFileList(m_strFileName);
-}
+	else
+		m_strFileName = _T("");
 
-void CccConfigDlg::OnFileOpen()
-{
-	static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
-
-	CFileDialog dlg(TRUE, 0, 0, OFN_FILEMUSTEXIST, szFilter);
-	if (dlg.DoModal() == IDOK)
-	{
-		m_strFileName = dlg.GetPathName();
-		if (loadConfigFile())
-			addToRecentFileList(m_strFileName);
-	}
+	updateUIState();
 }
 
 BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
@@ -365,7 +398,10 @@ BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
 	m_strFileName = *it;
 	if (loadConfigFile())
 		addToRecentFileList(m_strFileName);
+	else
+		m_strFileName = _T("");
 
+	updateUIState();
 	return TRUE;
 }
 
@@ -381,7 +417,6 @@ void CccConfigDlg::updateRecentFileMenu(void)
 		CString strNo;
 		strNo.Format(_T("%d "), i);
 		m_pMenuOpen->AppendMenu(MF_STRING, ID_FILE_MRU_FILE1 + i - 1, strNo + *it);
-
 	}
 }
 
@@ -422,20 +457,32 @@ void CccConfigDlg::PostNcDestroy()
 
 void CccConfigDlg::addToRecentFileList(const CString& strFileName)
 {
-	std::list<CString>::iterator it = std::find(m_listRecentFile.begin(), m_listRecentFile.end(), strFileName);
-	if (it != m_listRecentFile.end())
-		m_listRecentFile.erase(it);
+	removeFromRecentFileList(strFileName, FALSE);
 	m_listRecentFile.push_front(strFileName);
 
 	updateRecentFileMenu();
+}
+
+void CccConfigDlg::removeFromRecentFileList(const CString& strFileName, BOOL bRefresh)
+{
+	std::list<CString>::iterator it = std::find(m_listRecentFile.begin(), m_listRecentFile.end(), strFileName);
+	if (it != m_listRecentFile.end())
+		m_listRecentFile.erase(it);
+
+	if (bRefresh)
+		updateRecentFileMenu();
 }
 
 void CccConfigDlg::initPopupMenu(void)
 {
 	m_pMenuOpen = new CMenu();
 	m_pMenuOpen->CreatePopupMenu();
-	m_pMenuOpen->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_FILE_OPEN, _T("&Open..."));
+	m_pMenuOpen->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_FILE_OPEN, _T("&Open..."));
 	m_pMenuOpen->AppendMenu(MF_SEPARATOR, 0, _T(""));
+
+	m_pMenuSave = new CMenu();
+	m_pMenuSave->CreatePopupMenu();
+	m_pMenuSave->AppendMenu(MF_STRING|MF_BYCOMMAND, ID_MYMENU_SAVE_AS, _T("Save &As..."));
 
 	m_pMenuHelp = new CMenu();
 	m_pMenuHelp->CreatePopupMenu();
@@ -448,6 +495,8 @@ void CccConfigDlg::initPopupMenu(void)
 
 BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 {
+	static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
+
 	switch (nID)
 	{
 	case ID_MYMENU_HELP_ENG:
@@ -462,9 +511,74 @@ BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 	case ID_MYMENU_HELP_EMAIL:
 		UTIL::openURL(_T("mailto://zenith.yin@gmail.com"));
 		break;
+	case ID_MYMENU_FILE_OPEN:
+		{
+			CFileDialog dlg(TRUE, 0, 0, OFN_FILEMUSTEXIST, szFilter);
+			if (dlg.DoModal() == IDOK)
+			{
+				m_strFileName = dlg.GetPathName();
+				if (loadConfigFile())
+					addToRecentFileList(m_strFileName);
+			}
+		}
+	case ID_MYMENU_SAVE_AS:
+		{
+			CFileDialog dlg(FALSE, 0, _T("cc_config.xml"),
+				OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, szFilter);
+			if (dlg.DoModal() == IDOK)
+			{
+				m_strFileName = dlg.GetPathName();
+				saveConfigFileAs(m_strFileName);
+				addToRecentFileList(m_strFileName);
+
+				applyConfigFile();
+			}
+		}
 	default:
 		break;
 	}
 
 	return TRUE;
+}
+
+BOOL CccConfigDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_MOUSEMOVE)
+		m_tooltip.RelayEvent(pMsg);
+
+	return CDialog::PreTranslateMessage(pMsg);
+}
+
+BOOL CccConfigDlg::setToolTipIconAndTitle(CToolTipCtrl *pToolTip, int tti, const CString& strTitle)
+{
+	return ::SendMessage((HWND)pToolTip->m_hWnd, (UINT)TTM_SETTITLE, (WPARAM)tti, (LPARAM)(LPCTSTR)strTitle);
+}
+
+void CccConfigDlg::updateUIState(void)
+{
+	if (m_strFileName.GetLength() > 0)
+	{
+		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BTN_SAVE)->EnableWindow(TRUE);
+		m_pMenuSave->EnableMenuItem(ID_MYMENU_SAVE_AS, MF_BYCOMMAND | MF_ENABLED);
+
+		enableOptionPages(TRUE);
+	}
+	else
+	{
+		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BTN_SAVE)->EnableWindow(FALSE);
+		m_pMenuSave->EnableMenuItem(ID_MYMENU_SAVE_AS, MF_BYCOMMAND | MF_DISABLED);
+
+		enableOptionPages(FALSE);
+	}
+}
+
+void CccConfigDlg::enableOptionPages(BOOL bEnabled)
+{
+	m_pageLogging.enable(bEnabled);
+	m_pageOption.enable(bEnabled);
+	m_pageOption2.enable(bEnabled);
+	m_pageOption3.enable(bEnabled);
+	m_pageOption4.enable(bEnabled);
 }

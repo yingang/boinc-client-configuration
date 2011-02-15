@@ -164,3 +164,14 @@ void CPageOption2::initOption(void)
 	m_mapText["client_version_check_url"] = std::make_pair(IDC_EDIT_CLIENT_VERSION_CHECK_URL, TT_URL);
 	m_mapText["network_test_url"] = std::make_pair(IDC_EDIT_NETWORK_TEST_URL, TT_URL);
 }
+
+void CPageOption2::enable(BOOL bEnabled)
+{
+	for (std::map<std::string, std::pair<int, int> >::iterator it = m_mapText.begin();
+		it != m_mapText.end(); ++it)
+	{
+		GetDlgItem(it->second.first)->EnableWindow(bEnabled);
+	}
+
+	m_cmbForceAuth.EnableWindow(bEnabled);
+}

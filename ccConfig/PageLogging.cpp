@@ -55,6 +55,11 @@ BOOL CPageLogging::OnInitDialog()
 	((CButton *)GetDlgItem(IDC_CHECK_FILE_XFER))->SetCheck(TRUE);
 	((CButton *)GetDlgItem(IDC_CHECK_SCHED_OPS))->SetCheck(TRUE);
 
+	m_tooltip.Create(this, TTS_NOPREFIX | TTS_BALLOON);
+	m_tooltip.AddTool(GetDlgItem(IDC_CHECK_TASK), _T("The start and completion of compute jobs (should get two messages per job). "));
+	m_tooltip.AddTool(GetDlgItem(IDC_CHECK_FILE_XFER), _T("The start and completion of file transfers. "));
+	m_tooltip.AddTool(GetDlgItem(IDC_CHECK_SCHED_OPS), _T("Connections with scheduling servers. "));
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -147,4 +152,20 @@ void CPageLogging::initLoggingItem(void)
 	m_mapLogging["unparsed_xml"] = IDC_CHECK_UNPARSED_XML;
 
 	m_mapLogging["work_fetch_debug"] = IDC_CHECK_WORK_FETCH_DEBUG;
+}
+
+void CPageLogging::enable(BOOL bEnabled)
+{
+	for (std::map<std::string, int>::iterator it = m_mapLogging.begin();
+		it != m_mapLogging.end(); ++it)
+	{
+		GetDlgItem(it->second)->EnableWindow(bEnabled);
+	}
+}
+BOOL CPageLogging::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_MOUSEMOVE)
+		m_tooltip.RelayEvent(pMsg);
+
+	return CDialog::PreTranslateMessage(pMsg);
 }
