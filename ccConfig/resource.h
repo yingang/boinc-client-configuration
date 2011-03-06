@@ -91,7 +91,9 @@
 #define IDC_BUTTON1                     1021
 #define IDC_CHECK_RR_SIMULATION         1022
 #define IDC_CHECK_SCHED_OP_DEBUG        1023
+#define IDC_EDIT_FILEPATH               1023
 #define IDC_CHECK_SCRSAVE_DEBUG         1024
+#define IDC_EDIT2                       1024
 #define IDC_CHECK_STATE_DEBUG           1025
 #define IDC_CHECK_STATEFILE_DEBUG       1026
 #define IDC_CHECK_TASK_DEBUG            1027
@@ -113,7 +115,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32777
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_CONTROL_VALUE         1025
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

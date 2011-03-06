@@ -35,24 +35,24 @@ public:
 private:
 	void loadRecentFileList(void);
 	void saveRecentFileList(void);
-	void addToRecentFileList(const CString& strFileName);
-	void removeFromRecentFileList(const CString& strFileName, BOOL bRefresh = TRUE);
+	void addToRecentFileList(const CString& strFilePath);
+	void removeFromRecentFileList(const CString& strFilePath, BOOL bRefresh = TRUE);
 
 	void updateRecentFileMenu(void);
 
-	BOOL loadConfigFile(void);
-	void saveConfigFileAs(const CString& strFileName);
+	BOOL loadConfigFile(const CString& strFilePath);
+	void saveConfigFile(const CString& strFilePath);
 	void applyConfigFile(void);
 
 	UINT getConfigFileLocation(void);
+	BOOL getSaveAsFilePath(CString& strFilePath);
+	void setCurrentFilePath(const CString& strFilePath);
 
 	void initPopupMenu(void);
 	BOOL setToolTipIconAndTitle(CToolTipCtrl* pToolTip, int tti, const CString& strTitle);
-	void updateUIState(void);
-	void enableOptionPages(BOOL bEnabled);
 
 	std::list<CString> m_listRecentFile;
-	CString m_strFileName;
+	CString m_strFilePath;
 	CMenu* m_pMenuOpen;
 	CMenu* m_pMenuSave;
 	CMenu* m_pMenuHelp;

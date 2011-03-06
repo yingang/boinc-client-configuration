@@ -56,6 +56,9 @@ END_MESSAGE_MAP()
 #define ID_MYMENU_SAVE_AS		0x8020
 #define ID_MYMENU_FILE_OPEN		0x8021
 
+#define ID_MYMENU_MRU_FIRST		0x8050
+#define ID_MYMENU_MRU_END		0x8060
+
 CccConfigDlg::CccConfigDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CccConfigDlg::IDD, pParent)
 {
@@ -86,7 +89,7 @@ BEGIN_MESSAGE_MAP(CccConfigDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_HELP, &CccConfigDlg::OnBnClickedHelp)
 	ON_BN_CLICKED(IDC_BTN_DELETE, &CccConfigDlg::OnBnClickedDelete)
 	ON_BN_CLICKED(IDC_BTN_OPEN, &CccConfigDlg::OnBnClickedOpen)
-	ON_COMMAND_EX_RANGE(ID_FILE_MRU_FILE1, ID_FILE_MRU_FILE16, CccConfigDlg::OnRecentFileOpen)
+	ON_COMMAND_EX_RANGE(ID_MYMENU_MRU_FIRST, ID_MYMENU_MRU_END, CccConfigDlg::OnRecentFileOpen)
 	ON_COMMAND_EX_RANGE(ID_MYMENU, ID_MYMENU + 100, CccConfigDlg::OnPopupMenuClicked)
 END_MESSAGE_MAP()
 
@@ -214,12 +217,20 @@ void CccConfigDlg::OnBnClickedOk()
 
 void CccConfigDlg::OnBnClickedSave()
 {
-	saveConfigFileAs(m_strFileName);
+	if (m_strFilePath.GetLength() == 0)
+	{
+		CString strFilePath;
+		if (!getSaveAsFilePath(strFilePath))
+			return;
 
+		setCurrentFilePath(strFilePath);
+	}
+
+	saveConfigFile(m_strFilePath);
 	applyConfigFile();
 }
 
-void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
+void CccConfigDlg::saveConfigFile(const CString& strFilePath)
 {
 	TiXmlDocument doc;
 
@@ -240,7 +251,7 @@ void CccConfigDlg::saveConfigFileAs(const CString& strFileName)
 	pRoot->LinkEndChild(pOptions);
 
 	doc.LinkEndChild(pRoot);
-	doc.SaveFile(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
+	doc.SaveFile(UTIL::convertToMultiChar(LPCTSTR(m_strFilePath)).c_str());
 }
 
 void CccConfigDlg::applyConfigFile(void)
@@ -254,7 +265,7 @@ void CccConfigDlg::applyConfigFile(void)
 	{
 		CString strDataDir = BOINC::getDataDir();
 		if (strDataDir.GetLength() == 0
-			|| m_strFileName.Left(strDataDir.GetLength()) != strDataDir)
+			|| m_strFilePath.Left(strDataDir.GetLength()) != strDataDir)
 			return;	// it's not the local in-use file
 
 		::ShellExecute(AfxGetMainWnd()->m_hWnd,
@@ -267,17 +278,17 @@ void CccConfigDlg::applyConfigFile(void)
 	else if (uDriveType == DRIVE_REMOTE)
 	{
 		CString strPwd;
-		if (!BOINC::getAuthPwd(m_strFileName.Left(m_strFileName.ReverseFind('\\') + 1), strPwd))
+		if (!BOINC::getAuthPwd(m_strFilePath.Left(m_strFilePath.ReverseFind('\\') + 1), strPwd))
 		{
 			MessageBox(_T("Failed to access the remote gui_rpc_auth.cfg."),
 				_T("Apply cc_config.xml"), MB_OK|MB_ICONERROR);
 			return;
 		}
 
-		if (m_strFileName.Left(2) != _T("\\\\"))
+		if (m_strFilePath.Left(2) != _T("\\\\"))
 			return;	// can't figure out the remote hostname
 
-		CString strHostName = m_strFileName.Mid(2, m_strFileName.Find(_T("\\"), 2) - 2);
+		CString strHostName = m_strFilePath.Mid(2, m_strFilePath.Find(_T("\\"), 2) - 2);
 
 		::ShellExecute(AfxGetMainWnd()->m_hWnd,
 			_T("open"),
@@ -286,7 +297,7 @@ void CccConfigDlg::applyConfigFile(void)
 			_T(""),
 			SW_SHOW);
 
-		MessageBox(m_strFileName + _T(" has been modified, ")
+		MessageBox(m_strFilePath + _T(" has been modified, ")
 			_T("please check the remote client log to see if the new configuation has been applied.\n\n")
 			_T("If it's not, please check the remote machine:\n")
 			_T("1. firewall setting (port 31416 must be unblocked)\n")
@@ -297,21 +308,40 @@ void CccConfigDlg::applyConfigFile(void)
 
 UINT CccConfigDlg::getConfigFileLocation(void)
 {
-	if (m_strFileName.GetLength() < 3)
+	if (m_strFilePath.GetLength() < 3)
 		return DRIVE_UNKNOWN;
 
-	if (m_strFileName.Left(2) == _T("\\\\"))
+	if (m_strFilePath.Left(2) == _T("\\\\"))
 		return DRIVE_REMOTE;
 
-	if (m_strFileName.Mid(1, 2) != _T(":\\"))
+	if (m_strFilePath.Mid(1, 2) != _T(":\\"))
 		return DRIVE_UNKNOWN;
 
-	return ::GetDriveType(m_strFileName.Left(3));
+	return ::GetDriveType(m_strFilePath.Left(3));
 }
 
-BOOL CccConfigDlg::loadConfigFile(void)
+BOOL CccConfigDlg::getSaveAsFilePath(CString& strFilePath)
 {
-	TiXmlDocument hXMLDoc(UTIL::convertToMultiChar(LPCTSTR(m_strFileName)).c_str());
+	static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
+	CFileDialog dlg(FALSE, 0, _T("cc_config.xml"), OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT, szFilter);
+
+	CString strInitDir = BOINC::getDataDir();
+	dlg.m_ofn.lpstrInitialDir = strInitDir.GetBuffer();
+	if (dlg.DoModal() == IDOK)
+	{
+		strFilePath = dlg.GetPathName();
+		addToRecentFileList(strFilePath);
+	}
+	else
+		strFilePath = _T("");
+
+	strInitDir.ReleaseBuffer();
+	return strFilePath.GetLength() != 0;
+}
+
+BOOL CccConfigDlg::loadConfigFile(const CString& strFilePath)
+{
+	TiXmlDocument hXMLDoc(UTIL::convertToMultiChar(LPCTSTR(strFilePath)).c_str());
 	if (!hXMLDoc.LoadFile())
 	{
 		MessageBox(_T("Failed to load cc_config.xml!"),
@@ -342,7 +372,7 @@ BOOL CccConfigDlg::loadConfigFile(void)
 		m_pageOption4.loadFromXML(pOptions);
 	}
 
-	MessageBox(m_strFileName + _T(" has been loaded successfully."),
+	MessageBox(strFilePath + _T(" has been loaded successfully."),
 		_T("Load cc_config.xml"), MB_OK|MB_ICONINFORMATION);
 
 	return TRUE;
@@ -355,15 +385,14 @@ void CccConfigDlg::OnBnClickedHelp()
 
 void CccConfigDlg::OnBnClickedDelete()
 {
-	if (IDYES == MessageBox(_T("Do u want to delete the ") + m_strFileName + _T("?"),
+	if (IDYES == MessageBox(_T("Do u want to delete the ") + m_strFilePath + _T("?"),
 		_T("Delete cc_config.xml"), MB_YESNO|MB_ICONQUESTION))
 	{
-		removeFromRecentFileList(m_strFileName);
-		::DeleteFile(m_strFileName);
+		removeFromRecentFileList(m_strFilePath);
+		::DeleteFile(m_strFilePath);
 		applyConfigFile();
 
-		m_strFileName = _T("");
-		updateUIState();
+		setCurrentFilePath(_T(""));
 
 		m_pageLogging.restore();
 		m_pageOption.restore();
@@ -375,18 +404,19 @@ void CccConfigDlg::OnBnClickedDelete()
 
 void CccConfigDlg::OnBnClickedOpen()
 {
-	m_strFileName = BOINC::getDataDir() + _T("cc_config.xml");
-	if (loadConfigFile())
-		addToRecentFileList(m_strFileName);
+	CString strFilePath = BOINC::getDataDir() + _T("cc_config.xml");
+	if (loadConfigFile(strFilePath))
+	{
+		addToRecentFileList(strFilePath);
+		setCurrentFilePath(strFilePath);
+	}
 	else
-		m_strFileName = _T("");
-
-	updateUIState();
+		setCurrentFilePath(_T(""));
 }
 
 BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
 {
-	int nFileNo = nID - ID_FILE_MRU_FILE1 + 1;
+	int nFileNo = nID - ID_MYMENU_MRU_FIRST + 1;
 
 	std::list<CString>::iterator it= m_listRecentFile.begin();
 	while (--nFileNo && it != m_listRecentFile.end())
@@ -395,20 +425,22 @@ BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
 	if (it == m_listRecentFile.end())
 		return TRUE;
 
-	m_strFileName = *it;
-	if (loadConfigFile())
-		addToRecentFileList(m_strFileName);
+	CString strFilePath = *it;
+	if (loadConfigFile(strFilePath))
+	{
+		addToRecentFileList(strFilePath);
+		setCurrentFilePath(strFilePath);
+	}
 	else
-		m_strFileName = _T("");
+		setCurrentFilePath(_T(""));
 
-	updateUIState();
 	return TRUE;
 }
 
 void CccConfigDlg::updateRecentFileMenu(void)
 {
 	for (int i = 1; i <= MAX_MRU_ITEM; ++i)
-		m_pMenuOpen->DeleteMenu(ID_FILE_MRU_FILE1 + i - 1, MF_BYCOMMAND);
+		m_pMenuOpen->DeleteMenu(ID_MYMENU_MRU_FIRST + i - 1, MF_BYCOMMAND);
 
 	int i = 1;
 	for (std::list<CString>::iterator it = m_listRecentFile.begin();
@@ -416,7 +448,7 @@ void CccConfigDlg::updateRecentFileMenu(void)
 	{
 		CString strNo;
 		strNo.Format(_T("%d "), i);
-		m_pMenuOpen->AppendMenu(MF_STRING, ID_FILE_MRU_FILE1 + i - 1, strNo + *it);
+		m_pMenuOpen->AppendMenu(MF_STRING, ID_MYMENU_MRU_FIRST + i - 1, strNo + *it);
 	}
 }
 
@@ -455,17 +487,17 @@ void CccConfigDlg::PostNcDestroy()
 	CDialog::PostNcDestroy();
 }
 
-void CccConfigDlg::addToRecentFileList(const CString& strFileName)
+void CccConfigDlg::addToRecentFileList(const CString& strFilePath)
 {
-	removeFromRecentFileList(strFileName, FALSE);
-	m_listRecentFile.push_front(strFileName);
+	removeFromRecentFileList(strFilePath, FALSE);
+	m_listRecentFile.push_front(strFilePath);
 
 	updateRecentFileMenu();
 }
 
-void CccConfigDlg::removeFromRecentFileList(const CString& strFileName, BOOL bRefresh)
+void CccConfigDlg::removeFromRecentFileList(const CString& strFilePath, BOOL bRefresh)
 {
-	std::list<CString>::iterator it = std::find(m_listRecentFile.begin(), m_listRecentFile.end(), strFileName);
+	std::list<CString>::iterator it = std::find(m_listRecentFile.begin(), m_listRecentFile.end(), strFilePath);
 	if (it != m_listRecentFile.end())
 		m_listRecentFile.erase(it);
 
@@ -495,8 +527,6 @@ void CccConfigDlg::initPopupMenu(void)
 
 BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 {
-	static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
-
 	switch (nID)
 	{
 	case ID_MYMENU_HELP_ENG:
@@ -513,25 +543,27 @@ BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 		break;
 	case ID_MYMENU_FILE_OPEN:
 		{
+			static TCHAR BASED_CODE szFilter[] = _T("BOINC Client Configuration|*.xml||");
 			CFileDialog dlg(TRUE, 0, 0, OFN_FILEMUSTEXIST, szFilter);
 			if (dlg.DoModal() == IDOK)
 			{
-				m_strFileName = dlg.GetPathName();
-				if (loadConfigFile())
-					addToRecentFileList(m_strFileName);
+				CString strFilePath = dlg.GetPathName();
+				if (loadConfigFile(strFilePath))
+				{
+					addToRecentFileList(strFilePath);
+					setCurrentFilePath(strFilePath);
+				}
+				else
+					setCurrentFilePath(_T(""));
 			}
 		}
 	case ID_MYMENU_SAVE_AS:
 		{
-			CFileDialog dlg(FALSE, 0, _T("cc_config.xml"),
-				OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, szFilter);
-			if (dlg.DoModal() == IDOK)
+			CString strFilePath;
+			if (getSaveAsFilePath(strFilePath))
 			{
-				m_strFileName = dlg.GetPathName();
-				saveConfigFileAs(m_strFileName);
-				addToRecentFileList(m_strFileName);
-
-				applyConfigFile();
+				setCurrentFilePath(strFilePath);
+				OnBnClickedSave();
 			}
 		}
 	default:
@@ -554,31 +586,18 @@ BOOL CccConfigDlg::setToolTipIconAndTitle(CToolTipCtrl *pToolTip, int tti, const
 	return ::SendMessage((HWND)pToolTip->m_hWnd, (UINT)TTM_SETTITLE, (WPARAM)tti, (LPARAM)(LPCTSTR)strTitle);
 }
 
-void CccConfigDlg::updateUIState(void)
+void CccConfigDlg::setCurrentFilePath(const CString& strFilePath)
 {
-	if (m_strFileName.GetLength() > 0)
-	{
-		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(TRUE);
-		GetDlgItem(IDC_BTN_SAVE)->EnableWindow(TRUE);
-		m_pMenuSave->EnableMenuItem(ID_MYMENU_SAVE_AS, MF_BYCOMMAND | MF_ENABLED);
+	m_strFilePath = strFilePath;
 
-		enableOptionPages(TRUE);
+	if (m_strFilePath.GetLength() > 0)
+	{
+		GetDlgItem(IDC_EDIT_FILEPATH)->SetWindowText(m_strFilePath);
+		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(TRUE);
 	}
 	else
 	{
+		GetDlgItem(IDC_EDIT_FILEPATH)->SetWindowText(_T("No file is loaded!"));
 		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(FALSE);
-		GetDlgItem(IDC_BTN_SAVE)->EnableWindow(FALSE);
-		m_pMenuSave->EnableMenuItem(ID_MYMENU_SAVE_AS, MF_BYCOMMAND | MF_DISABLED);
-
-		enableOptionPages(FALSE);
 	}
-}
-
-void CccConfigDlg::enableOptionPages(BOOL bEnabled)
-{
-	m_pageLogging.enable(bEnabled);
-	m_pageOption.enable(bEnabled);
-	m_pageOption2.enable(bEnabled);
-	m_pageOption3.enable(bEnabled);
-	m_pageOption4.enable(bEnabled);
 }

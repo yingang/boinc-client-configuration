@@ -83,23 +83,24 @@ CAPTION "About ccConfig"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "BOINC Client Configuration, v1.2.1",IDC_STATIC,42,14,125,8,SS_NOPREFIX
+    LTEXT           "BOINC Client Configuration, v1.2.2",IDC_STATIC,42,14,125,8,SS_NOPREFIX
     LTEXT           "(c) 2011 Yin Gang. All rights reserved.",IDC_STATIC,42,30,139,8
     DEFPUSHBUTTON   "OK",IDOK,131,47,50,14,WS_GROUP
 END
 
-IDD_CCCONFIG_DIALOG DIALOGEX 0, 0, 337, 236
+IDD_CCCONFIG_DIALOG DIALOGEX 0, 0, 337, 253
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "BOINC Client Configuration"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "&Help",IDC_BTN_HELP,7,214,50,14
-    PUSHBUTTON      "&Delete",IDC_BTN_DELETE,87,214,50,14
-    PUSHBUTTON      "&Save",IDC_BTN_SAVE,141,214,50,14
-    PUSHBUTTON      "&Open",IDC_BTN_OPEN,195,214,50,14
-    PUSHBUTTON      "E&xit",IDCANCEL,280,214,50,14
-    CONTROL         "",IDC_TABSHEET,"SysTabControl32",WS_TABSTOP,7,7,323,200
+    PUSHBUTTON      "&Help",IDC_BTN_HELP,7,231,50,14
+    PUSHBUTTON      "&Delete",IDC_BTN_DELETE,87,231,50,14
+    PUSHBUTTON      "&Save",IDC_BTN_SAVE,141,231,50,14
+    PUSHBUTTON      "&Open",IDC_BTN_OPEN,195,231,50,14
+    PUSHBUTTON      "E&xit",IDCANCEL,280,231,50,14
+    CONTROL         "",IDC_TABSHEET,"SysTabControl32",WS_TABSTOP,7,24,323,200
+    EDITTEXT        IDC_EDIT_FILEPATH,7,7,323,15,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
 END
 
 IDD_PAGE_OPTION DIALOGEX 0, 0, 316, 183
@@ -260,7 +261,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,1,6
+ FILEVERSION 1,2,2,7
  PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -278,7 +279,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Yin Gang"
             VALUE "FileDescription", "BOINC Client Configuration"
-            VALUE "FileVersion", "1, 2, 1, 6"
+            VALUE "FileVersion", "1, 2, 2, 7"
             VALUE "InternalName", "ccConfig.exe"
             VALUE "LegalCopyright", "(c) 2011 Yin Gang. All rights reserved."
             VALUE "OriginalFilename", "ccConfig.exe"
@@ -314,7 +315,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 330
         TOPMARGIN, 7
-        BOTTOMMARGIN, 228
+        BOTTOMMARGIN, 245
     END
 
     IDD_PAGE_OPTION, DIALOG
