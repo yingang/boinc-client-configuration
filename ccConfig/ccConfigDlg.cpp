@@ -328,10 +328,7 @@ BOOL CccConfigDlg::getSaveAsFilePath(CString& strFilePath)
 	CString strInitDir = BOINC::getDataDir();
 	dlg.m_ofn.lpstrInitialDir = strInitDir.GetBuffer();
 	if (dlg.DoModal() == IDOK)
-	{
 		strFilePath = dlg.GetPathName();
-		addToRecentFileList(strFilePath);
-	}
 	else
 		strFilePath = _T("");
 
@@ -406,10 +403,7 @@ void CccConfigDlg::OnBnClickedOpen()
 {
 	CString strFilePath = BOINC::getDataDir() + _T("cc_config.xml");
 	if (loadConfigFile(strFilePath))
-	{
-		addToRecentFileList(strFilePath);
 		setCurrentFilePath(strFilePath);
-	}
 	else
 		setCurrentFilePath(_T(""));
 }
@@ -427,10 +421,7 @@ BOOL CccConfigDlg::OnRecentFileOpen(UINT nID)
 
 	CString strFilePath = *it;
 	if (loadConfigFile(strFilePath))
-	{
-		addToRecentFileList(strFilePath);
 		setCurrentFilePath(strFilePath);
-	}
 	else
 		setCurrentFilePath(_T(""));
 
@@ -549,10 +540,7 @@ BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 			{
 				CString strFilePath = dlg.GetPathName();
 				if (loadConfigFile(strFilePath))
-				{
-					addToRecentFileList(strFilePath);
 					setCurrentFilePath(strFilePath);
-				}
 				else
 					setCurrentFilePath(_T(""));
 			}
@@ -594,6 +582,8 @@ void CccConfigDlg::setCurrentFilePath(const CString& strFilePath)
 	{
 		GetDlgItem(IDC_EDIT_FILEPATH)->SetWindowText(m_strFilePath);
 		GetDlgItem(IDC_BTN_DELETE)->EnableWindow(TRUE);
+
+		addToRecentFileList(m_strFilePath);
 	}
 	else
 	{
