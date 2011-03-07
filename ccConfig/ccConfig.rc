@@ -261,7 +261,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,3,8
+ FILEVERSION 1,2,4,9
  PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -279,7 +279,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Yin Gang"
             VALUE "FileDescription", "BOINC Client Configuration"
-            VALUE "FileVersion", "1, 2, 3, 8"
+            VALUE "FileVersion", "1, 2, 4, 9"
             VALUE "InternalName", "ccConfig.exe"
             VALUE "LegalCopyright", "(c) 2011 Yin Gang. All rights reserved."
             VALUE "OriginalFilename", "ccConfig.exe"

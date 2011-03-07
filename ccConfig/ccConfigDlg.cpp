@@ -545,6 +545,7 @@ BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 					setCurrentFilePath(_T(""));
 			}
 		}
+		break;
 	case ID_MYMENU_SAVE_AS:
 		{
 			CString strFilePath;
@@ -554,6 +555,7 @@ BOOL CccConfigDlg::OnPopupMenuClicked(UINT nID)
 				OnBnClickedSave();
 			}
 		}
+		break;
 	default:
 		break;
 	}
