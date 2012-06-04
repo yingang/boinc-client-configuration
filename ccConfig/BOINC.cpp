@@ -3,6 +3,27 @@
 
 #include "Util.h"
 
+void error()
+{
+    LPVOID lpMsgBuf;
+    FormatMessage( 
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_FROM_SYSTEM | 
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        GetLastError(),
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+        (LPTSTR) &lpMsgBuf,
+        0,
+        NULL 
+        );
+
+    // Display the string.
+    MessageBox( NULL, (LPCTSTR)lpMsgBuf, _T("Error"), MB_OK | MB_ICONINFORMATION );
+    // Free the buffer.
+    LocalFree( lpMsgBuf );
+}
+
 BOOL BOINC::getSetupReg(const CString& strKey, CString& strValue)
 {
 	HKEY hKey;
@@ -11,6 +32,15 @@ BOOL BOINC::getSetupReg(const CString& strKey, CString& strValue)
 		NULL,
 		KEY_READ,
 		&hKey);
+
+    if (lResult == 2)
+    {
+        lResult = ::RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+            _T("SOFTWARE\\Space Sciences Laboratory, U.C. Berkeley\\BOINC Setup"),
+            NULL,
+            KEY_READ | KEY_WOW64_64KEY,
+            &hKey);
+    }
 
 	if (lResult != ERROR_SUCCESS)
 		return FALSE;

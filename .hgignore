@@ -1,0 +1,9 @@
+syntax: glob
+Debug
+Release
+ipch
+*.sdf
+*.suo
+*.user
+*.filters
+*.aps
