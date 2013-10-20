@@ -15,7 +15,6 @@
 #define IDD_PAGE_OPTION4                133
 #define IDR_MENU_OPEN                   134
 #define IDC_TABSHEET                    1000
-#define IDC_CHECK_DEBT_DEBUG            1001
 #define IDC_CHECK_REPORT_RESULTS_IMMEDIATELY 1001
 #define IDC_CHECK_WORK_FETCH_DEBUG      1002
 #define IDC_BTN_SAVE                    1002
@@ -51,10 +50,13 @@
 #define IDC_CHECK_CPU_SCHED             1011
 #define IDC_CHECK_NO_ALT_PLATFORM       1011
 #define IDC_EDIT_IGNORE_ATI_DEV         1011
+#define IDC_EDIT_EXCLUSIVE_GPU_APP2     1011
+#define IDC_EDIT_DATA_DIR               1011
 #define IDC_CHECK_CPU_SCHED_DEBUG       1012
 #define IDC_CHECK_NO_GPUS               1012
 #define IDC_EDIT_IGNORE_CUDA_DEV        1012
 #define IDC_EDIT_HTTP_SERVER_NAME       1012
+#define IDC_EDIT_IGNORE_INTEL_DEV       1012
 #define IDC_CHECK_DCF_DEBUG             1013
 #define IDC_CHECK_NO_PRIORITY_CHANGE    1013
 #define IDC_EDIT_MAX_FILE_XFERS         1013
@@ -89,17 +91,28 @@
 #define IDC_CHECK_PROXY_DEBUG           1021
 #define IDC_CHECK_ZERO_DEBTS            1021
 #define IDC_BUTTON1                     1021
+#define IDC_EDIT_IGNORE_NVIDIA_DEV      1021
 #define IDC_CHECK_RR_SIMULATION         1022
 #define IDC_CHECK_SCHED_OP_DEBUG        1023
 #define IDC_EDIT_FILEPATH               1023
+#define IDC_EDIT_HTTP_TRANSFER_TIMEOUT  1023
 #define IDC_CHECK_SCRSAVE_DEBUG         1024
 #define IDC_EDIT2                       1024
 #define IDC_CHECK_STATE_DEBUG           1025
+#define IDC_EDIT_HTTP_TRANSFER_TIMEOUT_BPS 1025
 #define IDC_CHECK_STATEFILE_DEBUG       1026
+#define IDC_EDIT_MAX_EVENT_LOG_LINES    1026
 #define IDC_CHECK_TASK_DEBUG            1027
 #define IDC_CHECK_TIME_DEBUG            1028
+#define IDC_EDIT_REC_HALF_LIFE_DAYS     1028
 #define IDC_CHECK_TIME_DEBUG2           1029
 #define IDC_CHECK_UNPARSED_XML          1029
+#define IDC_CHECK_DISK_USAGE_DEBUG      1030
+#define IDC_CHECK_PRIORITY_DEBUG        1031
+#define IDC_CHECK_SUSPEND_DEBUG         1032
+#define IDC_CHECK_TRICKLE_DEBUG         1033
+#define IDC_CHECK_EXIT_BEFORE_START     1034
+#define IDC_CHECK_FETCH_ON_UPDATE       1035
 #define ID_OPEN_OPEN                    32771
 #define ID_OPEN_RECENTFILES             32772
 #define CRecentFileList                 32773
@@ -115,7 +128,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32777
-#define _APS_NEXT_CONTROL_VALUE         1025
+#define _APS_NEXT_CONTROL_VALUE         1036
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

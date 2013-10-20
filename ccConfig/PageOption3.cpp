@@ -136,13 +136,19 @@ void CPageOption3::restore(void)
 void CPageOption3::initOption(void)
 {
 	m_mapOption["ignore_ati_dev"] = std::make_pair(IDC_EDIT_IGNORE_ATI_DEV, NT_ZEROABLE);
-	m_mapOption["ignore_cuda_dev"] = std::make_pair(IDC_EDIT_IGNORE_CUDA_DEV, NT_ZEROABLE);
+	m_mapOption["ignore_intel_dev"] = std::make_pair(IDC_EDIT_IGNORE_INTEL_DEV, NT_ZEROABLE);
+    m_mapOption["ignore_nvidia_dev"] = std::make_pair(IDC_EDIT_IGNORE_NVIDIA_DEV, NT_ZEROABLE);
+    m_mapOption["http_transfer_timeout"] = std::make_pair(IDC_EDIT_HTTP_TRANSFER_TIMEOUT, NT_POSITIVE);
+    m_mapOption["http_transfer_timeout_bps"] = std::make_pair(IDC_EDIT_HTTP_TRANSFER_TIMEOUT_BPS, NT_POSITIVE);
+    m_mapOption["max_event_log_lines"] = std::make_pair(IDC_EDIT_MAX_EVENT_LOG_LINES, NT_ZEROABLE);
 	m_mapOption["max_file_xfers"] = std::make_pair(IDC_EDIT_MAX_FILE_XFERS, NT_POSITIVE);
 	m_mapOption["max_file_xfers_per_project"] = std::make_pair(IDC_EDIT_MAX_FILE_XFERS_PER_PROJECT, NT_POSITIVE);
 	m_mapOption["max_stderr_file_size"] = std::make_pair(IDC_EDIT_MAX_STDERR_FILE_SIZE, NT_POSITIVE);
 	m_mapOption["max_stdout_file_size"] = std::make_pair(IDC_EDIT_MAX_STDOUT_FILE_SIZE, NT_POSITIVE);
 	m_mapOption["max_tasks_reported"] = std::make_pair(IDC_EDIT_MAX_TASKS_REPORTED, NT_POSITIVE);
-	m_mapOption["ncpus"] = std::make_pair(IDC_EDIT_NCPUS, NT_ZEROABLE);
+
+    m_mapOption["ncpus"] = std::make_pair(IDC_EDIT_NCPUS, NT_ZEROABLE);
+    m_mapOption["rec_half_life_days"] = std::make_pair(IDC_EDIT_REC_HALF_LIFE_DAYS, NT_POSITIVE);
 	m_mapOption["save_stats_days"] = std::make_pair(IDC_EDIT_SAVE_STATS_DAYS, NT_POSITIVE);
 	m_mapOption["start_delay"] = std::make_pair(IDC_EDIT_START_DELAY, NT_POSITIVE);
 }

@@ -109,22 +109,23 @@ void CPageOption::initOption(void)
 	m_mapOption["disallow_attach"] = IDC_CHECK_DISABLE_ATTACH;
 	m_mapOption["dont_check_file_sizes"] = IDC_CHECK_DONT_CHECK_FILE_SIZES;
 	m_mapOption["dont_contact_ref_site"] = IDC_CHECK_DONT_CONTACT_REF_SITE;
+    m_mapOption["exit_before_start"] = IDC_CHECK_EXIT_BEFORE_START;
 	m_mapOption["exit_when_idle"] = IDC_CHECK_EXIT_WHEN_IDLE;
 	m_mapOption["fetch_minimal_work"] = IDC_CHECK_FETCH_MINIMAL_WORK;
+    m_mapOption["fetch_on_update"] = IDC_CHECK_FETCH_ON_UPDATE;
 	m_mapOption["http_1_0"] = IDC_CHECK_HTTP_1_0;
 	m_mapOption["no_alt_platform"] = IDC_CHECK_NO_ALT_PLATFORM;
 	m_mapOption["no_gpus"] = IDC_CHECK_NO_GPUS;
 	m_mapOption["no_priority_change"] = IDC_CHECK_NO_PRIORITY_CHANGE;
+
 	m_mapOption["os_random_only"] = IDC_CHECK_OS_RANDOM_ONLY;
 	m_mapOption["report_results_immediately"] = IDC_CHECK_REPORT_RESULTS_IMMEDIATELY;
-
 	m_mapOption["run_apps_manually"] = IDC_CHECK_RUN_APPS_MANUALLY;
 	m_mapOption["simple_gui_only"] = IDC_CHECK_SIMPLE_GUI_ONLY;
 	m_mapOption["suppress_net_info"] = IDC_CHECK_SUPRESS_NET_INFO;
 	m_mapOption["use_all_gpus"] = IDC_CHECK_USE_ALL_GPUS;
 	m_mapOption["use_certs"] = IDC_CHECK_USE_CERTS;
 	m_mapOption["use_certs_only"] = IDC_CHECK_USE_CERTS_ONLY;
-	m_mapOption["zero_debts"] = IDC_CHECK_ZERO_DEBTS;
 }
 
 BOOL CPageOption::isDefaultSet(int nID)
