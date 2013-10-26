@@ -30,7 +30,7 @@ BOOL BOINC::getSetupReg(const CString& strKey, CString& strValue)
 	LONG lResult = ::RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 		_T("SOFTWARE\\Space Sciences Laboratory, U.C. Berkeley\\BOINC Setup"),
 		NULL,
-		KEY_READ,
+		KEY_READ | KEY_WOW64_64KEY,
 		&hKey);
 
     if (lResult == 2)
@@ -38,7 +38,7 @@ BOOL BOINC::getSetupReg(const CString& strKey, CString& strValue)
         lResult = ::RegOpenKeyEx(HKEY_LOCAL_MACHINE,
             _T("SOFTWARE\\Space Sciences Laboratory, U.C. Berkeley\\BOINC Setup"),
             NULL,
-            KEY_READ | KEY_WOW64_64KEY,
+            KEY_READ,
             &hKey);
     }
 

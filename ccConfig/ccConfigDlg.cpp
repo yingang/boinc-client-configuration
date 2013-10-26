@@ -341,7 +341,7 @@ BOOL CccConfigDlg::loadConfigFile(const CString& strFilePath)
 	TiXmlDocument hXMLDoc(UTIL::convertToMultiChar(LPCTSTR(strFilePath)).c_str());
 	if (!hXMLDoc.LoadFile())
 	{
-		MessageBox(_T("Failed to load cc_config.xml!"),
+		MessageBox(_T("Failed to load ") + strFilePath + _T("!"),
 			_T("Load cc_config.xml"), MB_OK|MB_ICONERROR);
 		return FALSE;
 	}
