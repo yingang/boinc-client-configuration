@@ -1,5 +1,4 @@
 # boinc-client-configuration
-Automatically exported from code.google.com/p/boinc-client-configuration
 
 A Windows GUI for [BOINC client configuration](http://boinc.berkeley.edu/wiki/Client_configuration) (cc\_config.xml).
 
