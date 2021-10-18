@@ -12,4 +12,4 @@ Target User:
   1. BOINC users crunching with GPUs
   1. ...
 
-![http://boinc-client-configuration.googlecode.com/files/screenshot.png](http://boinc-client-configuration.googlecode.com/files/screenshot.png)
+![Screenshot.png](Screenshot.png)
